@@ -18,7 +18,8 @@ Devotee {i}
 Name   : {d.full_name}
 Age    : {d.age}
 Gender : {d.gender}
-Address: {d.address}
+
+Spiritual Place: {d.spiritual_places}
 ID     : {d.aadhar_image_url}
 """
 
@@ -32,8 +33,8 @@ NEW VR DARSHAN BOOKING
 Contact Number : {booking.contact_number}
 WhatsApp       : {booking.whatsapp_number}
 Email          : {booking.email_address}
+Address: {booking.address}
 
-Spiritual Place: {booking.spiritual_place}
 Date           : {booking.preferred_date}
 Time Slot      : {booking.time_slot}
 
@@ -62,7 +63,7 @@ Decline (Payment Not Received):
 
     resend.Emails.send({
         "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
-        "to": ["hr.tirthghumo@gmail.com"],
+        "to": ["thekomal2502@gmail.com"],
         "subject": "VR Darshan Booking – Action Required",
         "text": body
     })

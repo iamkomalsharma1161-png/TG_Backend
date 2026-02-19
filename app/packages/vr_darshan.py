@@ -23,36 +23,31 @@ router = APIRouter()
 )
 async def create_vr_darshan_booking(
     background_tasks: BackgroundTasks,
-    # ---------- Contact Details ----------
 
+    # -------- Common Booking Fields --------
     contact_number: str = Form(...),
     whatsapp_number: str = Form(...),
     email_address: str = Form(...),
-
-    # ---------- Darshan Details ----------
-    spiritual_place: str = Form(...),
+    address: str = Form(...),
     preferred_date: date = Form(...),
     time_slot: str = Form(...),
     special_request: str | None = Form(None),
 
-    # ---------- Devotees ----------
+    # -------- Devotee Data --------
     devotees: str = Form(...),  # JSON string
     aadhar_images: list[UploadFile] = File(...),
-    payment_screenshot: UploadFile = File(None),
+
+    # -------- Payment --------
+    payment_screenshot: UploadFile | None = File(None),
 
     db: Session = Depends(get_db)
 ):
-    """
-    Create VR Darshan booking with multiple devotees
-    """
-
-    # ---------------- Parse Devotees ----------------
     try:
         devotees_data = json.loads(devotees)
     except Exception:
         raise HTTPException(
             status_code=400,
-            detail="Invalid devotees format. Must be valid JSON."
+            detail="Invalid devotees JSON format."
         )
 
     if not isinstance(devotees_data, list) or not devotees_data:
@@ -66,8 +61,9 @@ async def create_vr_darshan_booking(
             status_code=400,
             detail="Devotees count and Aadhaar images count must match."
         )
-    payment_screenshot_url = None
 
+    # -------- Upload Payment Screenshot --------
+    payment_screenshot_url = None
     if payment_screenshot:
         try:
             payment_screenshot_url = upload_to_supabase(
@@ -77,37 +73,55 @@ async def create_vr_darshan_booking(
         except Exception as e:
             raise HTTPException(
                 status_code=500,
-                detail=f"Failed to upload payment screenshot: {str(e)}"
+                detail=f"Payment upload failed: {str(e)}"
             )
 
-    # ---------------- Create Booking ----------------
+    # -------- Create Booking --------
     booking = models.VRDarshanBooking(
         contact_number=contact_number,
         whatsapp_number=whatsapp_number,
         email_address=email_address,
-        spiritual_place=spiritual_place,
+        address=address,
         preferred_date=preferred_date,
         time_slot=time_slot,
         special_request=special_request,
-        payment_screenshot=payment_screenshot_url
+        payment_screenshot=payment_screenshot_url,
+        booking_status="PENDING"
     )
 
     db.add(booking)
     db.flush()
 
-    # ---------------- Create Devotees ----------------
+    # -------- Create Devotees --------
     for index, devotee in enumerate(devotees_data):
-        required_fields = ["full_name", "age", "gender", "address"]
+
+        required_fields = [
+            "full_name",
+            "age",
+            "gender",
+            "category",
+            "spiritual_places"
+        ]
+    
 
         if not all(field in devotee for field in required_fields):
             raise HTTPException(
                 status_code=400,
-                detail=f"Missing devotee fields at index {index}"
+                detail=f"Missing fields in devotee at index {index}"
+            )
+        selected_temples = devotee["spiritual_places"]
+
+        if not isinstance(selected_temples, list) or not selected_temples:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Temple selection required at index {index}"
             )
 
-        image_hash , file_bytes = await generate_image_hash(aadhar_images[index])
+        image_hash, _ = await generate_image_hash(aadhar_images[index])
+        age = int(devotee["age"])
 
-        if devotee["age"] >= 60:
+
+        if age >= 60:
             try:
                 claim = models.VRBenefitClaim(
                     benefit_code="FREE_VR_60_PLUS",
@@ -124,37 +138,39 @@ async def create_vr_darshan_booking(
                 )
         aadhar_images[index].file.seek(0)
 
-        # Upload Aadhaar
-        aadhar_url = upload_to_supabase(
-            aadhar_images[index],
-            folder="vr_darshan_aadhar"
-            # file_bytes=file_bytes
-        )
-        
-        
+        try:
+            aadhar_url = upload_to_supabase(
+                aadhar_images[index],
+                folder="vr_darshan_aadhar"
+            )
+        except Exception as e:
+            raise HTTPException(
+                status_code=500,
+                detail=f"Aadhaar upload failed: {str(e)}"
+            )
+
         db.add(
             models.VRDarshanDevotee(
                 booking_id=booking.id,
                 full_name=devotee["full_name"],
                 age=devotee["age"],
                 gender=devotee["gender"],
-                address=devotee["address"],
+                category=devotee["category"],
+                spiritual_places=selected_temples,
                 aadhar_image_url=aadhar_url,
                 aadhar_image_hash=image_hash
             )
         )
 
-        db.flush()
-
-        
-
     db.commit()
+
     background_tasks.add_task(send_admin_vr_darshan_email, booking)
 
     return {
         "message": "VR Darshan booking created successfully",
         "booking_id": booking.id
     }
+
 
 @router.post("/instant-vr-darshan")
 async def add_multiple(devotees: str = Form(...),          

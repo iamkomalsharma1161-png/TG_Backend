@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from .database import Base
 from datetime  import date , datetime 
+from sqlalchemy.dialects.postgresql import JSON
 
 
 class ODT(Base):
@@ -212,22 +213,18 @@ class VRDarshanBooking(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    
-
-    # ---------------- Contact Details ----------------
     contact_number = Column(String(15), nullable=False)
     whatsapp_number = Column(String(15), nullable=False)
     email_address = Column(String(255), nullable=False)
+    address = Column(Text, nullable=False)
 
-    # ---------------- Darshan Details ----------------
-    spiritual_place = Column(String(150), nullable=False)
     preferred_date = Column(Date, nullable=False)
-    time_slot = Column(String(50), nullable=False)
-    special_request = Column(Text)
-    payment_screenshot = Column(String(255), nullable=True)
+    time_slot = Column(String(50), nullable=False)  # ✅ COMMON
 
-    # ---------------- Meta ----------------
-    is_confirmed = Column(Boolean, default=False)
+    special_request = Column(Text)
+    payment_screenshot = Column(String(255))
+    booking_status = Column(String(20), default="PENDING")
+
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -239,6 +236,7 @@ class VRDarshanBooking(Base):
         backref="booking",
         cascade="all, delete-orphan"
     )
+
 
     def __repr__(self):
         return f"<VRDarshanBooking id={self.id} place={self.spiritual_place}>"
@@ -254,21 +252,23 @@ class VRDarshanDevotee(Base):
         nullable=False
     )
 
-    # ---------------- Devotee Details ----------------
     full_name = Column(String(150), nullable=False)
     age = Column(Integer, nullable=False)
     gender = Column(String(20), nullable=False)
-    address = Column(Text, nullable=False)
 
-    # ---------------- Identity ----------------
+    category = Column(String(100), nullable=False)
+    spiritual_places = Column(JSON, nullable=False)
+    
+
     aadhar_image_url = Column(Text, nullable=False)
-    aadhar_image_hash = Column(String(64) , nullable = False )
+    aadhar_image_hash = Column(String(64), nullable=False)
 
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False
     )
+
 
     def __repr__(self):
         return f"<VRDarshanDevotee id={self.id} name={self.full_name}>"

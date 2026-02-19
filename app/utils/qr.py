@@ -35,41 +35,94 @@ def generate_payment_qr(amount: int) -> str:
 
     return file_path
 
-    
+CHAR_DHAM = [
+    "Kedarnath", "Badrinath", "Gangotri", "Yamunotri"
+]
+
+JYOTIRLINGA = [
+    "Somnath", "Mallikarjuna", "Mahakaleshwar",
+    "Omkareshwar", "Kedarnath Jyotirlinga",
+    "Bhimashankar", "Kashi Vishwanath",
+    "Trimbakeshwar", "Vaidyanath", "Nageshwar"
+]
+
+ABHISHEK_3D = [
+    "Mahakal 3D Abhishek",
+    "Kashi Vishwanath 3D",
+    "Somnath 3D",
+    "Omkareshwar 3D"
+]
+
+SHAKTIPEETH = [
+    "Vaishno Devi", "Kamakhya Devi",
+    "Kalighat", "Jwala Ji",
+    "Chintpurni", "Hinglaj Mata",
+    "Maa Tara Tarini", "Maa Sharda"
+]
 
 @router.get("/vr-darshan/price")
-async def calculate_vr_darshan_price(
-    number_of_persons: int,
-    spiritual_place:str,
+async def generate_vr_darshan_qr(
+    devotees: str = Form(...)
 ):
+    try:
+        devotees_data = json.loads(devotees)
+    except Exception:
+        raise HTTPException(400, "Invalid devotees JSON")
 
-    if number_of_persons <= 0:
-        raise HTTPException(status_code=400, detail="Invalid number of persons")
+    total_amount = 0
 
-    price_mapping = {
-        "All Char Dham": 151,
-        "Jyotirling Abhishek": 11,
-        "General": 51
-    }
+    for devotee in devotees_data:
 
-    if spiritual_place not in price_mapping:
-        raise HTTPException(status_code=400, detail="Invalid spiritual place")
+        category = devotee.get("category")
+        selected_temples = devotee.get("spiritual_places")
 
-    amount = number_of_persons * price_mapping[spiritual_place]
-    
+        if not category or not selected_temples:
+            raise HTTPException(400, "Category and spiritual_places required")
 
-    qr_url = None
-    session_id = None
+        # Expand "All Temples"
+        if "All Temples" in selected_temples:
+            if category == "Char Dham":
+                selected_temples = CHAR_DHAM
+            elif category == "Jyotirlinga & Shiv Darshan":
+                selected_temples = JYOTIRLINGA
+            elif category == "3D Abhishek Darshan":
+                selected_temples = ABHISHEK_3D
+            elif category == "Shaktipeeth & Devi Darshan":
+                selected_temples = SHAKTIPEETH
 
-    if amount > 0:
-        qr_path = generate_payment_qr(amount)
-        qr_url = upload_to_supabase_qr(qr_path, "vr_darshan_qr")
-        session_id = str(uuid.uuid4())
+        count = len(selected_temples)
+
+        # 🔥 Pricing Logic
+
+        if category == "Char Dham":
+            total_amount += 151 if count == 4 else count * 51
+
+        elif category == "Jyotirlinga & Shiv Darshan":
+            if count == 10:
+                total_amount += 451
+            elif count == 6:
+                total_amount += 251
+            else:
+                total_amount += count * 51
+
+        elif category == "3D Abhishek Darshan":
+            total_amount += 351 if count == len(ABHISHEK_3D) else count * 51
+
+        elif category == "Shaktipeeth & Devi Darshan":
+            total_amount += 401 if count == len(SHAKTIPEETH) else count * 51
+
+        else:
+            raise HTTPException(400, f"Invalid category {category}")
+
+    qr_path = generate_payment_qr(total_amount)
+    qr_url = upload_to_supabase_qr(qr_path, "vr_darshan_qr")
 
     return {
-        "payment_qr_url": qr_url,
-        "amount":amount,
+        "amount": total_amount,
+        "payment_qr_url": qr_url
     }
+
+
 @router.get("/manali/price")
 async def calculate_manali_price(
     sleeper: int , 
