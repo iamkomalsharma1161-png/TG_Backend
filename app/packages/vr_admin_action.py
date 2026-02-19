@@ -29,11 +29,9 @@ async def admin_action(
     if not booking:
         raise HTTPException(404, "Booking not found")
 
-    if booking.is_confirmed:
-        return {"message": "Action already taken"}
 
     if action == "approve":
-        booking.is_confirmed = True
+        
         await send_user_approval_mail(booking)
 
     elif action == "decline_age":
