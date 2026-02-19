@@ -20,7 +20,7 @@ Hello 😊,
 
 We’re happy to let you know that your **VR Darshan booking has been confirmed** 🙏🌼
 
-On "{b.preferred_date}" at "{b.time_slot}", our "Saarthi will come to your place" to help you experience the darshan of **{b.spiritual_place}** in a calm and comfortable way.  
+On "{b.preferred_date}" at "{b.time_slot}", our "Saarthi will come to your place" to help you experience the darshan in a calm and comfortable way.  
 Before coming, **our Saarthi will call you** to inform and coordinate with you .
 
 Please don’t worry about anything 🤍  
