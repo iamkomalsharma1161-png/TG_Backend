@@ -242,82 +242,84 @@ def generate_payment_qr(amount: int) -> str:
 
 @router.get("/vr-darshan/price")
 async def generate_vr_darshan_qr(
-devotees: str = Query(...)
+# devotees: str = Query(...),
+price:int
 ):
-    devotees_data = json.loads(devotees)
-    total_amount = 0
+    # devotees_data = json.loads(devotees)
+    # total_amount = 0
 
-    for devotee in devotees_data:
+    # for devotee in devotees_data:
 
-        age = int(devotee.get("age", 0))
-        is_disabled = devotee.get("disability", False)
+    #     age = int(devotee.get("age", 0))
+    #     is_disabled = devotee.get("disability", False)
 
-        # 🔥 FREE condition
-        if age >= 60 or is_disabled:
-            continue
+    #     # 🔥 FREE condition
+    #     if age >= 60 or is_disabled:
+    #         continue
 
-        temples_by_category = devotee.get("temples")
+    #     temples_by_category = devotee.get("temples")
 
-        if not temples_by_category:
-            raise HTTPException(400, "Temple selection required")
+    #     if not temples_by_category:
+    #         raise HTTPException(400, "Temple selection required")
 
-        for category, temple_list in temples_by_category.items():
+    #     for category, temple_list in temples_by_category.items():
 
-            if category not in CATALOGUE:
-                raise HTTPException(400, f"Invalid category: {category}")
+    #         if category not in CATALOGUE:
+    #             raise HTTPException(400, f"Invalid category: {category}")
 
-            category_data = CATALOGUE[category]
-            all_temples = category_data["temples"]
-            packages = category_data["packages"]
-            per_temple_price = category_data["perTemple"]
+    #         category_data = CATALOGUE[category]
+    #         all_temples = category_data["temples"]
+    #         packages = category_data["packages"]
+    #         per_temple_price = category_data["perTemple"]
 
-            # Handle "All Temples"
-            if "All Temples" in temple_list:
-                temple_list = all_temples
+    #         # Handle "All Temples"
+    #         if "All Temples" in temple_list:
+    #             temple_list = all_temples
 
-            # Validate temples
-            for temple in temple_list:
-                if temple not in all_temples:
-                    raise HTTPException(
-                        400,
-                        f"{temple} not valid for {category}"
-                    )
+    #         # Validate temples
+    #         for temple in temple_list:
+    #             if temple not in all_temples:
+    #                 raise HTTPException(
+    #                     400,
+    #                     f"{temple} not valid for {category}"
+    #                 )
 
-            count = len(temple_list)
-            applied_package = False
+    #         count = len(temple_list)
+    #         applied_package = False
 
-            # 🔥 Check all packages
-            for pkg in packages:
+    #         # 🔥 Check all packages
+    #         for pkg in packages:
 
-                pkg_temples = pkg.get("temples")
+    #             pkg_temples = pkg.get("temples")
 
-                # Case 1: Full category package (no temples defined)
-                if pkg_temples is None:
-                    if count == len(all_temples):
-                        total_amount += pkg["price"]
-                        applied_package = True
-                        break
+    #             # Case 1: Full category package (no temples defined)
+    #             if pkg_temples is None:
+    #                 if count == len(all_temples):
+    #                     total_amount += pkg["price"]
+    #                     applied_package = True
+    #                     break
 
-                # Case 2: Specific bundle package
-                else:
-                    if set(temple_list) == set(pkg_temples):
-                        total_amount += pkg["price"]
-                        applied_package = True
-                        break
+    #             # Case 2: Specific bundle package
+    #             else:
+    #                 if set(temple_list) == set(pkg_temples):
+    #                     total_amount += pkg["price"]
+    #                     applied_package = True
+    #                     break
 
-            # If no package matched → apply perTemple
-            if not applied_package:
-                total_amount += count * per_temple_price
+    #         # If no package matched → apply perTemple
+    #         if not applied_package:
+    #             total_amount += count * per_temple_price
 
     # Generate QR only if payment required
-    if total_amount > 0:
-        qr_path = generate_payment_qr(total_amount)
+    # if total_amount > 0:
+    if price > 0:
+        qr_path = generate_payment_qr(price)
         qr_url = upload_to_supabase_qr(qr_path, "vr_darshan_qr")
     else:
         qr_url = None
 
     return {
-        "amount": total_amount,
+        "amount": price,
         "payment_qr_url": qr_url
     }
 
