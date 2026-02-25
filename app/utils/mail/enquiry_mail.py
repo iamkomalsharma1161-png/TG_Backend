@@ -16,7 +16,7 @@ async def send_enquiry_email(data):
 
     Category           : {data.category}
     Destination        : {data.destination}
-    Custom Destination : {data.custom_destination or "N/A"}
+    
     Additional Dest.   : {data.additional_destination or "N/A"}
 
     Travel Start Date  : {data.start_date}
@@ -27,14 +27,14 @@ async def send_enquiry_email(data):
     Departure City     : {data.departure_city}
 
     Referral Source    : {data.referral_source}
-    Referral Other     : {data.referral_other or "N/A"}
+    
 
     Special Requests   : {data.special_requests or "None"}
     """
 
     email = {
         "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
-        "to": ["hr.tirthghumo@gmail.com"],
+        "to": ["ceo.tirthghumo@gmail.com"],
         "subject": "New Travel Enquiry Received",
         "text": email_body.strip(),
     }
