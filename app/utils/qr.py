@@ -360,9 +360,16 @@ async def calculate_manali_price(
 
 @router.get("/odt/qr")
 async def generate_odt_qr(
-  is_coupon_applied:bool
+  is_coupon_applied:bool,
+  meal_preference:str
 ):
-    amount = 1201
+    with_meal_amount = 1201
+    without_meal_amount = 1030
+
+    if meal_preference == "with_meal":
+        amount = with_meal_amount
+    else:
+        amount = without_meal_amount
 
     if is_coupon_applied:
         amount = amount-201
