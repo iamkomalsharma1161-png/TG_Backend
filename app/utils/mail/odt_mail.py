@@ -80,8 +80,8 @@ async def send_booking_email(data, image_path: str | None = None):
     try:
         admin_action_base = "https://tgbackend-production-7c1c.up.railway.app/odt/confirm"
         
-        button_739 = f"{admin_action_base}?booking_id={data.id}&amount=739"
-        button_939 = f"{admin_action_base}?booking_id={data.id}&amount=939"
+        button_829 = f"{admin_action_base}?booking_id={data.id}&amount=829"
+        button_1000 = f"{admin_action_base}?booking_id={data.id}&amount=1000"
         decline_link = f"https://tgbackend-production-7c1c.up.railway.app/odt/decline?booking_id={data.id}"
 
         safe_text = f"""
@@ -92,8 +92,8 @@ async def send_booking_email(data, image_path: str | None = None):
         Contact: {data.contact_number}
         College: {data.college_name}
         Package Review Links:
-        • Review package option (739): {button_739}
-        • Review package option (939): {button_939}
+        • Without Meal (829): {button_829}
+        • With Meal (1000): {button_1000}
         Decline booking: {decline_link}
 
         
@@ -119,7 +119,7 @@ async def send_booking_email(data, image_path: str | None = None):
         # }
         email_payload = {
             "from": "Tirth Ghumo <onboarding@resend.dev>",
-            "to": ["hr.tirthghumo@gmail.com"],
+            "to": ["thekomal2502@gmail.com"],
             "subject": "New Trekking Package Booking",
             "text": safe_text.strip(),
                 }
@@ -183,7 +183,7 @@ async def send_email_with_invoice(data, invoice_path):
    Hey {data.full_name} 🌿
 
 Great news — your booking for the 1Day Mrignnath Trek with TirthGhumo 
-is confirmed for 7th December 2025!
+is confirmed for 22nd March 2026!
 
 Your payment has been approved successfully . 
 
