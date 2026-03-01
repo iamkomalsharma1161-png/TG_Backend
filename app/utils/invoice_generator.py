@@ -19,7 +19,8 @@ def generate_invoice(data , amount):
 
     c.drawImage(TEMPLATE_PATH, 0, 0, width=width, height=height)
 
-    invoice_no = f"INV-{uuid.uuid4().hex[:6].upper()}"
+    # invoice_no = f"INV-{uuid.uuid4().hex[:6].upper()}"
+    invoice_no = f"INV-{data.id}"
     submitted_date = getattr(data, "submitted_at", None)
     date_text = str(submitted_date.date()) if submitted_date else "N/A"
 
@@ -36,16 +37,16 @@ def generate_invoice(data , amount):
     # PACKAGE DETAILS
     # c.drawString(25 * mm, 185 * mm, "1 Day Adventure Trek")
     c.drawString(124 * mm, 142 * mm, "1")
-    c.drawString(145 * mm, 142 * mm,str(amount+60))
-    c.drawString(173 * mm, 142 * mm, str(amount+60))
+    c.drawString(145 * mm, 142 * mm,str(amount+201))
+    c.drawString(173 * mm, 142 * mm, str(amount+201))
 
     # OTHERS (UPI)
     # c.drawString(25 * mm, 172 * mm, "UPI")
     # c.drawString(170 * mm, 172 * mm, "939")
 
     # SUMMARY (RIGHT SIDE)
-    c.drawString(170 * mm, 104 * mm, str(amount+60))   # Subtotal
-    c.drawString(170 * mm, 89 * mm, "6%")     # Discount
+    c.drawString(170 * mm, 104 * mm, str(amount+201))   # Subtotal
+    c.drawString(170 * mm, 89 * mm, "Holi Offer")     # Discount
     c.drawString(170 * mm, 71 * mm, str(amount))   # Total
 
     # PAYMENT DETAILS
