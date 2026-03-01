@@ -33,26 +33,48 @@ def generate_invoice(data , amount):
 
     # BILL TO NAME
     c.drawString(52 * mm, 198 * mm, data.full_name)
-
+    
     # PACKAGE DETAILS
     # c.drawString(25 * mm, 185 * mm, "1 Day Adventure Trek")
     c.drawString(124 * mm, 142 * mm, "1")
-    c.drawString(145 * mm, 142 * mm,str(amount+201))
-    c.drawString(173 * mm, 142 * mm, str(amount+201))
+    if(amount == 829 or amount == 1000): # Holi Offer Applied
+        c.drawString(145 * mm, 142 * mm,str(amount+201))
+        c.drawString(173 * mm, 142 * mm, str(amount+201))
+        c.drawString(170 * mm, 104 * mm, str(amount+201))   # Subtotal
+        c.drawString(170 * mm, 89 * mm, "Holi Offer")     # Discount
+        c.drawString(170 * mm, 71 * mm, str(amount))   # Total
+
+        # PAYMENT DETAILS
+        c.drawString(75 * mm, 76 * mm, "UPI")
+        c.drawString(75 * mm, 66 * mm, str(amount))
+        c.drawString(75 * mm, 54 * mm, "0")
+    else:
+        c.drawString(145 * mm, 142 * mm,str(amount))
+        c.drawString(173 * mm, 142 * mm, str(amount))
+
+        c.drawString(170 * mm, 104 * mm, str(amount))   # Subtotal
+        c.drawString(170 * mm, 89 * mm, "0")     # Discount
+        c.drawString(170 * mm, 71 * mm, str(amount))   # Total
+
+        # PAYMENT DETAILS
+        c.drawString(75 * mm, 76 * mm, "UPI")
+        c.drawString(75 * mm, 66 * mm, str(amount))
+        c.drawString(75 * mm, 54 * mm, "0")
+            
 
     # OTHERS (UPI)
     # c.drawString(25 * mm, 172 * mm, "UPI")
     # c.drawString(170 * mm, 172 * mm, "939")
 
     # SUMMARY (RIGHT SIDE)
-    c.drawString(170 * mm, 104 * mm, str(amount+201))   # Subtotal
-    c.drawString(170 * mm, 89 * mm, "Holi Offer")     # Discount
-    c.drawString(170 * mm, 71 * mm, str(amount))   # Total
+    # c.drawString(170 * mm, 104 * mm, str(amount+201))   # Subtotal
+    # c.drawString(170 * mm, 89 * mm, "Holi Offer")     # Discount
+    # c.drawString(170 * mm, 71 * mm, str(amount))   # Total
 
-    # PAYMENT DETAILS
-    c.drawString(75 * mm, 76 * mm, "UPI")
-    c.drawString(75 * mm, 66 * mm, str(amount))
-    c.drawString(75 * mm, 54 * mm, "0")
-
+    # # PAYMENT DETAILS
+    # c.drawString(75 * mm, 76 * mm, "UPI")
+    # c.drawString(75 * mm, 66 * mm, str(amount))
+    # c.drawString(75 * mm, 54 * mm, "0")
+    print(amount , type(amount))
     c.save()
     return file_path

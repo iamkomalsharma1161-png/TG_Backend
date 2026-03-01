@@ -7,6 +7,7 @@ from app.utils.mail.odt_mail import send_booking_email , send_email_with_invoice
 import shutil, os
 from fastapi import BackgroundTasks
 from app.utils.invoice_generator import generate_invoice
+from app.utils.supabase_uploads import upload_to_supabase
 
 
 router = APIRouter()
@@ -40,6 +41,12 @@ async def odt_booking( background_tasks: BackgroundTasks,
         file_location = os.path.join(UPLOAD_DIR, file_name)
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(payment_screenshot.file, buffer)
+    # payment_screenshot_url = None
+    # if payment_screenshot:
+    #     payment_screenshot_url = upload_to_supabase(
+    #         payment_screenshot,
+    #         folder="odt_B7_payments"
+    #     )
     
     details = models.ODT(
         full_name=full_name,
@@ -66,7 +73,7 @@ async def odt_booking( background_tasks: BackgroundTasks,
 
     # invoice_path = generate_invoice(details)
 
-    background_tasks.add_task(send_booking_email, details, file_location)
+    background_tasks.add_task(send_booking_email, details , file_location)
     # background_tasks.add_task(send_email_with_invoice, details, invoice_path)
 
     return {"message" : "Payment Successful"}
@@ -80,6 +87,7 @@ async def confirm_amount(booking_id: int, amount: int, db: Session = Depends(get
         return {"error": "Booking not found"}
 
     # Generate invoice with selected amount
+    print(amount , type(amount))
     invoice_path = generate_invoice(booking, amount)
 
     # Send invoice to user

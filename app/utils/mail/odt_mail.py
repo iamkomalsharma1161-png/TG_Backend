@@ -76,12 +76,14 @@ base_url = settings.base_url
 #             print("EMAIL ERROR:", e)
 #             raise
 
-async def send_booking_email(data, image_path: str | None = None):
+async def send_booking_email(data , image_path: str | None = None):
     try:
-        admin_action_base = "https://tgbackend-production-7c1c.up.railway.app/odt/confirm"
+        admin_action_base = "http://127.0.0.1:8000/odt/confirm"
         
         button_829 = f"{admin_action_base}?booking_id={data.id}&amount=829"
         button_1000 = f"{admin_action_base}?booking_id={data.id}&amount=1000"
+        button_1201 = f"{admin_action_base}?booking_id={data.id}&amount=1201"
+        button_1030 = f"{admin_action_base}?booking_id={data.id}&amount=1030"
         decline_link = f"https://tgbackend-production-7c1c.up.railway.app/odt/decline?booking_id={data.id}"
 
         safe_text = f"""
@@ -94,6 +96,9 @@ async def send_booking_email(data, image_path: str | None = None):
         Package Review Links:
         • Without Meal (829): {button_829}
         • With Meal (1000): {button_1000}
+        • Without Meal(1030): {button_1030}
+        • With Meal(1201): {button_1201}
+        
         Decline booking: {decline_link}
 
         
@@ -110,6 +115,17 @@ async def send_booking_email(data, image_path: str | None = None):
                     "filename": file_name,
                     "type": "image/jpeg" if image_path.lower().endswith((".jpg", ".jpeg")) else "image/png"
                 })
+        # image_url = data.payment_screenshot
+        # response = requests.get(image_url, timeout=10)
+        # if response.status_code != 200:
+        #     raise Exception("Failed to fetch image from URL")
+        # image_bytes = response.content
+        # content_type = response.headers.get("Content-Type", "image/jpeg")
+        # attachments.append({
+        #     "content": base64.b64encode(image_bytes).decode("utf-8"),
+        #     "filename": f"{data.email_address}_payment_screenshot.jpg",
+        #     "type": content_type
+        # })
 
         # email_payload = {
         #     "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
@@ -119,7 +135,7 @@ async def send_booking_email(data, image_path: str | None = None):
         # }
         email_payload = {
             "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
-            "to": ["ceo.tirthghumo@gmail.com"],
+            "to": ["thekomal2502@gmail.com"],
             "subject": "New Trekking Package Booking",
             "text": safe_text.strip(),
                 }
