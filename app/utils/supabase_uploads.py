@@ -28,14 +28,14 @@ def upload_to_supabase(file, folder: str):
     print("DEBUG_KEY =", SUPABASE_KEY[:10])
     print("DEBUG_BUCKET =", BUCKET)
     # Upload (IMPORTANT: use file_bytes, NOT file.file)
-    supabase.storage.from_(BUCKET).upload(
+    settings.supabase.storage.from_(BUCKET).upload(
         path=file_path,
         file=file_bytes,  # MUST be bytes
         file_options={"content-type": file.content_type}
     )
 
     # Return public URL
-    public_url = supabase.storage.from_(BUCKET).get_public_url(file_path)
+    public_url = settings.supabase.storage.from_(BUCKET).get_public_url(file_path)
 
     return public_url
 
@@ -52,10 +52,10 @@ def upload_to_supabase_qr(file_path: str, folder: str) -> str:
 
     content_type = mimetypes.guess_type(file_path)[0] or "image/png"
 
-    supabase.storage.from_(BUCKET).upload(
+    settings.supabase.storage.from_(BUCKET).upload(
         path=storage_path,
         file=file_bytes,
         file_options={"content-type": content_type}
     )
 
-    return supabase.storage.from_(BUCKET).get_public_url(storage_path)
+    return settings.supabase.storage.from_(BUCKET).get_public_url(storage_path)

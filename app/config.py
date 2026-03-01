@@ -1,4 +1,6 @@
 from pydantic_settings import BaseSettings
+from supabase import create_client
+import os
 
 class Settings(BaseSettings):
     # database_hostname:str
@@ -25,7 +27,7 @@ class Settings(BaseSettings):
     supabase_url: str
     supabase_key: str
     base_url:str
-    
+    supabase = create_client(supabase_url , supabase_key)
 
     class Config:
         env_file = ".env"
