@@ -60,7 +60,9 @@ def generate_invoice(data , amount):
         c.drawString(75 * mm, 76 * mm, "UPI")
         c.drawString(75 * mm, 66 * mm, str(amount))
         c.drawString(75 * mm, 54 * mm, "0")
-            
+    print(amount , type(amount))
+    c.save()
+    return file_path        
 
     # OTHERS (UPI)
     # c.drawString(25 * mm, 172 * mm, "UPI")
@@ -75,6 +77,4 @@ def generate_invoice(data , amount):
     # c.drawString(75 * mm, 76 * mm, "UPI")
     # c.drawString(75 * mm, 66 * mm, str(amount))
     # c.drawString(75 * mm, 54 * mm, "0")
-    print(amount , type(amount))
-    c.save()
-    return file_path
+    
