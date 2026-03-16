@@ -82,6 +82,8 @@ async def send_booking_email(data , image_path: str | None = None):
     
         button_1201 = f"{admin_action_base}?booking_id={data.id}&amount=1201"
         button_1051 = f"{admin_action_base}?booking_id={data.id}&amount=1051"
+        button_1001 = f"{admin_action_base}?booking_id={data.id}&amount=1001"
+        button_1151 = f"{admin_action_base}?booking_id={data.id}&amount=1151"
         decline_link = f"https://tgbackend-production-4811.up.railway.app/odt/decline?booking_id={data.id}"
 
         safe_text = f"""
@@ -94,6 +96,8 @@ async def send_booking_email(data , image_path: str | None = None):
         Package Review Links:
         • Without Meal (1051): {button_1051}
         • With Meal(1201): {button_1201}
+        • Coupon and with meal(1151): {button_1151}
+        • Coupon and without meal(1001): {button_1001}
         
         Decline booking: {decline_link}
 
@@ -131,7 +135,7 @@ async def send_booking_email(data , image_path: str | None = None):
         # }
         email_payload = {
             "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
-            "to": ["ceo.tirthghumo@gmail.com"],
+            "to": ["thekomal2502@gmail.com"],
             "subject": "New Trekking Package Booking",
             "text": safe_text.strip(),
                 } 

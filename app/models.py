@@ -32,7 +32,14 @@ class ODT(Base):
         CheckConstraint("gender <> '' AND TRIM(gender) <> ''", name="gender_not_blank"),
         CheckConstraint("college_name <> '' AND TRIM(college_name) <> ''", name="college_not_blank"),
     )
+class ODTCoupon(Base):
+    __tablename__ = "odt_coupon"
 
+    id = Column(Integer, primary_key=True, index=True)
+    coupon_code = Column(String, unique=True, index=True)
+    discount = Column(Integer, default=50)
+    used = Column(Boolean, default=False)
+    used_by_email = Column(String, nullable=True)
 
 class Tamia(Base):
     __tablename__="tamia"
