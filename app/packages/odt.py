@@ -35,17 +35,17 @@ async def odt_booking( background_tasks: BackgroundTasks,
    
 ):
 
-    discount = 0 
+    # discount = 0 
 
-    if coupon_code and coupon_code.strip():
-        coupon = db.query(models.ODTCoupon).filter(
-            models.ODTCoupon.coupon_code == coupon_code
-        ).first()
-        if not coupon:
-            raise HTTPException(status_code=400, detail="Invalid coupon code")
-        if coupon.used:
-            raise HTTPException(status_code=400, detail="Coupon code already used")
-        discount = coupon.discount
+    # if coupon_code and coupon_code.strip():
+    #     coupon = db.query(models.ODTCoupon).filter(
+    #         models.ODTCoupon.coupon_code == coupon_code
+    #     ).first()
+    #     if not coupon:
+    #         raise HTTPException(status_code=400, detail="Invalid coupon code")
+    #     if coupon.used:
+    #         raise HTTPException(status_code=400, detail="Coupon code already used")
+    #     discount = coupon.discount
 
     file_location = None
 
@@ -84,10 +84,10 @@ async def odt_booking( background_tasks: BackgroundTasks,
     db.commit() 
     db.refresh(details)
 
-    if coupon_code:
-        coupon.used = True 
-        coupon.used_by_email = email_address
-        db.commit()
+    # if coupon_code:
+    #     coupon.used = True 
+    #     coupon.used_by_email = email_address
+    #     db.commit()
 
     # invoice_path = generate_invoice(details)
 
