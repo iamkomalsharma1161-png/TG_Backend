@@ -41,8 +41,8 @@ async def send_bhajan_jamming_email(data):
 
     Event Details
     📅 Date: 29th March 2026
-    ⏰ Time: [Event Time]
-    📍 Venue: [Cafe Name & Location]
+    ⏰ Time: 6:30 PM onwards
+    📍 Venue: Oh!Waah Momo & Waffle , Siddharth Lake City , Bhopal
     🎟 Entry: Free & Open for All
 
     Feel free to come with friends and be part of this beautiful evening.
