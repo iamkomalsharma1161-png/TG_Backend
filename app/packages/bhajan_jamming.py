@@ -15,7 +15,7 @@ async def create_bhajan_jamming_form(
     background_tasks: BackgroundTasks,
 
     full_name: str = Form(...),
-    age: int = Form(...),
+    age: int = Form(None),
     contact_number: str = Form(...),
     db: Session = Depends(get_db)
 ):
