@@ -15,21 +15,21 @@ async def create_bhajan_jamming_form(
     background_tasks: BackgroundTasks,
 
     full_name: str = Form(...),
-    email_address: str = Form(...),
+    age: int = Form(...),
     contact_number: str = Form(...),
     db: Session = Depends(get_db)
 ):
     bhajan_jamming_entry = models.BhajanJamming(
         full_name=full_name,
-        email_address=email_address,
+        age=age,
         contact_number=contact_number
     )
 
     db.add(bhajan_jamming_entry)
     db.commit()
     db.refresh(bhajan_jamming_entry)
-    if(email_address):
-        background_tasks.add_task(send_bhajan_jamming_email, bhajan_jamming_entry)
+    # if(email_address):
+    #     background_tasks.add_task(send_bhajan_jamming_email, bhajan_jamming_entry)
 
     return {"status": "Bhajan Jamming form submitted successfully"}
 

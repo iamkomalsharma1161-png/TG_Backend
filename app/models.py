@@ -394,7 +394,9 @@ class BhajanJamming(Base):
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String(150), nullable=False)
     contact_number = Column(String(15))
-    email_address = Column(String(255))
+    # email_address = Column(String(255))
+    age = Column(Integer)
+    
     submitted_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
