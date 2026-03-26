@@ -82,8 +82,8 @@ async def send_booking_email(data , image_path: str | None = None):
     
         button_1251 = f"{admin_action_base}?booking_id={data.id}&amount=1251"
         button_1101 = f"{admin_action_base}?booking_id={data.id}&amount=1101"
-        button_1301 = f"{admin_action_base}?booking_id={data.id}&amount=1301"
-        button_1151 = f"{admin_action_base}?booking_id={data.id}&amount=1151"
+        button_1351= f"{admin_action_base}?booking_id={data.id}&amount=1351"
+        button_1201 = f"{admin_action_base}?booking_id={data.id}&amount=1201"
         decline_link = f"https://tgbackend-production-4811.up.railway.app/odt/decline?booking_id={data.id}"
 
         safe_text = f"""
@@ -94,8 +94,8 @@ async def send_booking_email(data , image_path: str | None = None):
         Contact: {data.contact_number}
         College: {data.college_name}
         Package Review Links:
-        • Without Meal (1151): {button_1151}
-        • With Meal(1301): {button_1301}
+        • Without Meal (1201): {button_1201}
+        • With Meal(1351): {button_1351}
         • Coupon and with meal(1251): {button_1251}
         • Coupon and without meal(1101): {button_1101}
         
