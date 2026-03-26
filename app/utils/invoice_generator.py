@@ -37,7 +37,7 @@ def generate_invoice(data , amount):
     # PACKAGE DETAILS
     # c.drawString(25 * mm, 185 * mm, "1 Day Adventure Trek")
     c.drawString(124 * mm, 142 * mm, "1")
-    if(amount == 1001 or amount == 1151): # Holi Offer Applied
+    if(amount == 1101 or amount == 1251): # Holi Offer Applied
         c.drawString(145 * mm, 142 * mm,str(amount+50))
         c.drawString(173 * mm, 142 * mm, str(amount+50))
         c.drawString(170 * mm, 104 * mm, str(amount+50))   # Subtotal

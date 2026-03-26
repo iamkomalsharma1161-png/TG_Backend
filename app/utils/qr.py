@@ -363,8 +363,8 @@ async def generate_odt_qr(
   is_coupon_applied:bool,
   meal_preference:str
 ):
-    with_meal_amount = 1201
-    without_meal_amount = 1051
+    with_meal_amount = 1301
+    without_meal_amount = 1151
 
     if meal_preference == "with_meal":
         amount = with_meal_amount
@@ -372,7 +372,7 @@ async def generate_odt_qr(
         amount = without_meal_amount
 
     if is_coupon_applied:
-        amount = amount
+        amount = amount - 50
 
     qr_url = create_qr_base64(amount)
 
