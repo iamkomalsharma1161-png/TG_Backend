@@ -6,41 +6,84 @@ from datetime  import date , datetime
 from sqlalchemy.dialects.postgresql import JSON
 
 
-class ODT(Base):
-    __tablename__ = "odt_bookings"
+# class ODT(Base):
+#     __tablename__ = "odt_bookings"
 
-    id = Column(Integer , primary_key= True , index=  True )
-    full_name = Column(String(100), nullable=False )
-    email_address = Column(String(100), nullable=False )
-    age = Column(Integer, nullable=False)
-    gender = Column(String(20), nullable=False)
-    contact_number = Column(String(10), nullable=False)
-    whatsapp_number = Column(String(10), nullable=False)
-    college_name = Column(String(200), nullable=False)
-    pick_up_loc = Column(String(50), nullable=False)
-    drop_loc = Column(String(50), nullable=False)
-    meal_preference = Column(String(30), nullable=False)
-    trip_exp_level = Column(String(40))
-    medical_details = Column(String(100))
-    payment_screenshot = Column(String(255), nullable=False)
-    agree = Column(Boolean, default=False)
-    submitted_at = Column(TIMESTAMP(timezone=True) , nullable= False ,server_default = text('now()') ) 
+#     id = Column(Integer , primary_key= True , index=  True )
+#     full_name = Column(String(100), nullable=False )
+#     email_address = Column(String(100), nullable=False )
+#     age = Column(Integer, nullable=False)
+#     gender = Column(String(20), nullable=False)
+#     contact_number = Column(String(12), nullable=False)
+#     whatsapp_number = Column(String(12), nullable=False)
+#     college_name = Column(String(200), nullable=False)
+#     pick_up_loc = Column(String(50), nullable=False)
+#     drop_loc = Column(String(50), nullable=False)
+#     meal_preference = Column(String(30), nullable=False)
+#     trip_exp_level = Column(String(40))
+#     medical_details = Column(String(100))
+#     payment_screenshot = Column(String(255), nullable=False)
+#     agree = Column(Boolean, default=False)
+#     submitted_at = Column(TIMESTAMP(timezone=True) , nullable= False ,server_default = text('now()') ) 
 
-    __table_args__ = (
-        CheckConstraint("full_name <> '' AND TRIM(full_name) <> ''", name="full_name_not_blank"),
-        CheckConstraint("email_address <> '' AND TRIM(email_address) <> ''", name="email_not_blank"),
-        CheckConstraint("gender <> '' AND TRIM(gender) <> ''", name="gender_not_blank"),
-        CheckConstraint("college_name <> '' AND TRIM(college_name) <> ''", name="college_not_blank"),
-    )
-class ODTCoupon(Base):
-    __tablename__ = "odt_coupon"
+#     __table_args__ = (
+#         CheckConstraint("full_name <> '' AND TRIM(full_name) <> ''", name="full_name_not_blank"),
+#         CheckConstraint("email_address <> '' AND TRIM(email_address) <> ''", name="email_not_blank"),
+#         CheckConstraint("gender <> '' AND TRIM(gender) <> ''", name="gender_not_blank"),
+#         CheckConstraint("college_name <> '' AND TRIM(college_name) <> ''", name="college_not_blank"),
+#     )
+# class ODTCoupon(Base):
+#     __tablename__ = "odt_coupon"
+
+#     id = Column(Integer, primary_key=True, index=True)
+#     coupon_code = Column(String, unique=True, index=True)
+#     discount = Column(Integer, default=50)
+#     used = Column(Boolean, default=False)
+#     used_by_email = Column(String, nullable=True)
+
+class ODT1(Base):
+    __tablename__ = "odt_bookings1"
 
     id = Column(Integer, primary_key=True, index=True)
-    coupon_code = Column(String, unique=True, index=True)
-    discount = Column(Integer, default=50)
-    used = Column(Boolean, default=False)
-    used_by_email = Column(String, nullable=True)
+    primary_email = Column(String(100), nullable=False)
+    total_people = Column(Integer, nullable=False)
+    total_price = Column(Integer, nullable=False)
+    meal_preference = Column(String(30), nullable=False)
+    status = Column(String(20), default="pending")
+    payment_screenshot = Column(String(255), nullable=False)
+    agree = Column(Boolean, default=False)
+    submitted_at = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("now()")
+    )
+class ODTTraveller(Base):
+    __tablename__ = "odt_travellers"
 
+    id = Column(Integer, primary_key=True, index=True)
+
+    booking_id = Column(
+        Integer,
+        ForeignKey("odt_bookings1.id"),
+        nullable=False
+    )
+
+    full_name = Column(String(100), nullable=False)
+    email_address = Column(String(100), nullable=False)
+
+    age = Column(Integer, nullable=False)
+    gender = Column(String(20), nullable=False)
+
+    pick_up_loc = Column(String(50), nullable=False)
+    drop_loc = Column(String(50), nullable=False)
+
+    contact_number = Column(String(12), nullable=False)
+    whatsapp_number = Column(String(12), nullable=False)
+
+    college_name = Column(String(200), nullable=False)
+
+    trip_exp_level = Column(String(40))
+    medical_details = Column(String(100))
 class Tamia(Base):
     __tablename__="tamia"
 
@@ -71,9 +114,9 @@ class Rishikesh_Haridwar(Base):
     gender = Column(String(20) , nullable = False)
     age = Column(Integer , nullable = False)
     email_address = Column(String(100) , nullable =  False)
-    contact_number = Column(String(20), nullable=False)
-    whatsapp_number = Column(String(20), nullable=False)
-    emergency_contact_number = Column(String(20), nullable=False)
+    contact_number = Column(String(12), nullable=False)
+    whatsapp_number = Column(String(12), nullable=False)
+    emergency_contact_number = Column(String(12), nullable=False)
     college_name = Column(String(200), nullable=False)
     proof_id_type = Column(String(200) , nullable = False) 
     mode_of_transport = Column(String(50) , nullable = False)
@@ -90,12 +133,12 @@ class Saarthi_Form(Base):
     full_name = Column(String(50) , nullable = False)
     date_of_birthday = Column(Date , nullable = False)
     gender = Column(String(20) , nullable = False)
-    aadhar_number = Column(String(50) , nullable = False)
+    aadhar_number = Column(String(12) , nullable = False)
     aadhar_card_image = Column(String(255) , nullable = False)
     profile_image = Column(String(255) , nullable = False)
     email_address = Column(String(100) , nullable =  False)
-    contact_number = Column(String(20), nullable=False)
-    whatsapp_number = Column(String(20), nullable=False)
+    contact_number = Column(String(12), nullable=False)
+    whatsapp_number = Column(String(12), nullable=False)
     current_city = Column(String(30) , nullable = False) 
     state = Column(String(30) , nullable = False)
     address = Column(String(100) , nullable = False)
@@ -115,7 +158,7 @@ class Enquiry_Form(Base):
 
     full_name = Column(String(150), nullable=False)
     email_address = Column(String(255), nullable=False, index=True)
-    contact_number = Column(String(15), nullable=False)
+    contact_number = Column(String(12), nullable=False)
 
     category = Column(String(100), nullable=False)
     destination = Column(String(150), nullable=False)
@@ -151,7 +194,7 @@ class HiringApplication(Base):
     id = Column(Integer, primary_key=True, index=True)
     full_name = Column(String(150), nullable=False)
     email_address = Column(String(255), nullable=False, index=True)
-    phone_number = Column(String(15), nullable=False)
+    phone_number = Column(String(12), nullable=False)
 
     
     gender = Column(String(20))
@@ -220,8 +263,8 @@ class VRDarshanBooking(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    contact_number = Column(String(15), nullable=False)
-    whatsapp_number = Column(String(15), nullable=False)
+    contact_number = Column(String(12), nullable=False)
+    whatsapp_number = Column(String(12), nullable=False)
     email_address = Column(String(255), nullable=False)
     address = Column(Text, nullable=False)
 
@@ -299,7 +342,7 @@ class InstantVRDarshan(Base):
     gender = Column(String(20), nullable=False)
     darshanCategory = Column(String(100), nullable=False)
     darshan = Column(String(150), nullable=False)
-    contact_number = Column(String(15), nullable=False)
+    contact_number = Column(String(12), nullable=False)
     aadhar_image_url = Column(Text, nullable=False)
     aadhar_image_hash = Column(String(64) , nullable = False )
     payment_option = Column(String(255), nullable=True)
@@ -318,7 +361,7 @@ class ShivratriVRDarshan(Base):
     gender = Column(String(20), nullable=True)
     darshanCategory = Column(String(100), nullable=True)
     darshan = Column(String(150), nullable=True)
-    contact_number = Column(String(15), nullable=True)
+    contact_number = Column(String(12), nullable=True)
     aadhar_image_url = Column(Text, nullable=True)
     submitted_at =  Column(
         DateTime(timezone=True),
@@ -334,9 +377,9 @@ class ManaliTripBooking(Base):
     gender = Column(String, nullable=False)
     age = Column(Integer, nullable=False)
     email = Column(String, nullable=False)
-    contact_number = Column(String, nullable=False)
-    whatsapp_number = Column(String, nullable=False)
-    emergency_number = Column(String, nullable=True)
+    contact_number = Column(String(12), nullable=False)
+    whatsapp_number = Column(String(12), nullable=False)
+    emergency_number = Column(String(12), nullable=True)
     college_name = Column(String, nullable=True)
     proof_id_type = Column(String, nullable=True)
     id_number = Column(String, nullable=True)

@@ -1,5 +1,7 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from app.config import settings 
+from sqlalchemy.orm import Session
+from app import models 
 import requests
 import resend 
 import base64
@@ -19,62 +21,65 @@ resend.api_key = settings.resend_api_key
 base_url = settings.base_url
 
 
-# async def send_booking_email(data, image_path: str | None = None):
-#     try:
-#         admin_action_base = "https://tgbackend-production-62ff.up.railway.app/odt/confirm"  # Base URL for admin actions
-#         print(admin_action_base)
-#         button_739 = f"{admin_action_base}?booking_id={data.id}&amount=739"
-#         button_939 = f"{admin_action_base}?booking_id={data.id}&amount=939"
-    
-#         html_body = f"""
-#         <h3>New Booking Received</h3>
-#         <p><b>Name:</b> {data.full_name}</p>
-#         <p><b>Email:</b> {data.email_address}</p>
-#         <p><b>Contact:</b> {data.contact_number}</p>
-#         <p><b>College:</b> {data.college_name}</p>
-    
-#         <p><b>Select Package Amount:</b></p>
-    
-#         <a href="{button_739}" 
-#            style="padding:10px 20px;background:#008CBA;color:white;text-decoration:none;border-radius:6px;">
-#            Approve ₹739
-#         </a>
-    
-#         <a href="{button_939}" 
-#            style="padding:10px 20px;background:#4CAF50;color:white;text-decoration:none;border-radius:6px;margin-left:10px;">
-#            Approve ₹939
-#         </a>
+
+# def send_admin_booking_mail(booking_id: int, image_path: str | None = None ):
+#     booking = db.query(models.ODT1).filter(
+#         models.ODT1.id == booking_id
+#     ).first()
+
+#     travellers = db.query(models.ODTTraveller).filter(
+#         models.ODTTraveller.booking_id == booking_id
+#     ).all()
+
+#     traveller_html = ""
+
+#     for i, t in enumerate(travellers, 1):
+#         traveller_html += f"""
+#         <p>{i}. {t.full_name} | {t.age} | {t.gender}</p>
 #         """
-    
-#         attachments = []
-    
-#         # ✅ Attach local file as Base64 (no 'path' key)
-#         if image_path and os.path.exists(image_path):
-#             with open(image_path, "rb") as f:
-#                 file_data = base64.b64encode(f.read()).decode("utf-8")
-#                 file_name = os.path.basename(image_path)
-#                 attachments.append({
-#                     "content": file_data,
-#                     "filename": file_name,
-#                     "type": "image/jpeg" if image_path.lower().endswith((".jpg", ".jpeg")) else "image/png"
-#                 })
-    
-#         email = {
-#             "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
-#             "to": ["tirthghumo@gmail.com"],
-#             "subject": "New Trekking Package Booking",
-#             "html": html_body,
-#         }
-#         if attachments:
-#             email["attachments"] = attachments
-    
-       
-#         response = await resend.Emails.send(email_payload)
-#             print("EMAIL SENT SUCCESSFULLY:", response)
-    
-#     except Exception as e:
-#             print("EMAIL ERROR:", e)
-#             raise
+#     admin_action_base = "https://tgbackend-production-4811.up.railway.app/odt/approve"
+#     approve_link = f"{admin_action_base}?booking_id={booking_id}"
+#     f"https://tgbackend-production-4811.up.railway.app/odt/decline?booking_id={booking_id}"
+#     html_body = f"""
+#     <h2>New Trek Booking</h2>
+
+#     <p><b>Booking ID:</b> {booking.id}</p>
+#     <p><b>Primary Email:</b> {booking.primary_email}</p>
+#     <p><b>Total People:</b> {booking.total_people}</p>
+#     <p><b>Total Amount:</b> ₹{booking.total_price}</p>
+#     <p><b>Meal:</b> {booking.meal_preference}</p>
+
+#     <h3>Travellers</h3>
+#     {traveller_html}
+
+#     <a href="{approve_link}">Approve</a>
+#     <br><br>
+#     <a href="{decline_link}">Decline</a>
+#     """
+#     attachments = []
+
+#     if image_path and os.path.exists(image_path):
+#         with open(image_path, "rb") as f:
+#             file_data = base64.b64encode(f.read()).decode("utf-8")
+#             file_name = os.path.basename(image_path)
+#             attachments.append({
+#                 "content": file_data,
+#                 "filename": file_name,
+#                 "type": "image/jpeg" if image_path.lower().endswith((".jpg", ".jpeg")) else "image/png"
+#             })
+
+#     email_payload = {
+#         "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
+#         "to":"thekomal2502@gmail.com",
+#         "subject":"New Trek Booking Verification",
+#         "html": html_body
+#     }
+#     if attachments:
+#             email_payload["attachments"] = attachments
+
+#     response = resend.Emails.send(email_payload)
+#     print("EMAIL SENT SUCCESSFULLY:", response)
+
 
 async def send_booking_email(data , image_path: str | None = None):
     try:
@@ -115,24 +120,7 @@ async def send_booking_email(data , image_path: str | None = None):
                     "filename": file_name,
                     "type": "image/jpeg" if image_path.lower().endswith((".jpg", ".jpeg")) else "image/png"
                 })
-        # image_url = data.payment_screenshot
-        # response = requests.get(image_url, timeout=10)
-        # if response.status_code != 200:
-        #     raise Exception("Failed to fetch image from URL")
-        # image_bytes = response.content
-        # content_type = response.headers.get("Content-Type", "image/jpeg")
-        # attachments.append({
-        #     "content": base64.b64encode(image_bytes).decode("utf-8"),
-        #     "filename": f"{data.email_address}_payment_screenshot.jpg",
-        #     "type": content_type
-        # })
 
-        # email_payload = {
-        #     "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
-        #     "to": ["thekomal2502@gmail.com"],
-        #     "subject": "New Trekking Package Booking",
-        #     "html": html_body,
-        # }
         email_payload = {
             "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
             "to": ["tirthghumo@gmail.com"],
@@ -241,3 +229,97 @@ Thank you for choosing TirthGhumo — Aastha Bhi, Suvidha Bhi 🌄
         resend.Emails.send(email)
     except Exception as e:
         raise Exception(f"Invoice email failed: {str(e)}")
+
+##############ODT CHANGES ################
+
+# async def send_booking_declined_email(data , email):
+#     try:
+#         text_body = f"""
+#         Hello,
+
+# Thank you for choosing TirthGhumo for your adventure.
+# We wanted to let you know that we've reviewed your recent booking attempt.
+# Unfortunately, we couldn’t verify the payment details on our end.
+
+# This might be due to a mismatch in the transaction ID or some other discrepancy.
+
+# If you believe this is an error, please feel free to reach out to us at
+# 6260499299 / 6204289831 — we’ll be happy to help resolve the issue.
+
+# We appreciate your understanding and hope to welcome you on another adventure soon.
+
+# Warm regards,
+# Team TirthGhumo
+#         """.strip()
+
+#         email_payload = {
+#             "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
+#             "to": [email],
+#             "subject": "Booking Update – Action Required",
+#             "text": text_body,
+#         }
+
+#         resend.Emails.send(email_payload)
+
+#     except Exception as e:
+#         print("DECLINE EMAIL ERROR:", e)
+#         raise
+
+
+
+
+# async def send_email_with_invoice(email ,data, invoice_path):
+#     """Send invoice PDF to user using Resend"""
+
+#     # ---- Attach PDF ----
+#     with open(invoice_path, "rb") as f:
+#         file_bytes = base64.b64encode(f.read()).decode("utf-8")
+
+#     # ---- Email Body ----
+#     email_body = f"""
+#    Hey 🌿
+
+# Great news — your booking for the 1Day Mrignnath Trek with TirthGhumo 
+# is confirmed for 12th April 2026!
+
+# Your payment has been approved successfully . 
+
+# All essential trip details, including timings and instructions, 
+# will be shared shortly on WhatsApp.
+
+# Please make sure you’ve requested to join the WhatsApp group,
+# as all updates will be shared there.
+
+# If you need any help or have questions, feel free to contact us 
+# at 6260499299 / 6204289831.
+
+# Get ready for an exciting adventure and a day full of unforgettable memories!
+
+# Warm regards,
+# Team TirthGhumo
+
+# Thank you for choosing TirthGhumo — Aastha Bhi, Suvidha Bhi 🌄
+
+#     """
+
+#     # ---- Email Payload ----
+#     email_payload = {
+#         "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
+#         "to": [email],
+#         "subject": "Your Trek Booking Invoice",
+#         "text": email_body.strip(),
+#         "attachments": [
+#             {
+#                 "filename": "invoice.pdf",
+#                 "content": file_bytes,
+#                 "type": "application/pdf"
+#             }
+#         ]
+#     }
+
+#     # ---- Send ----
+#     try:
+#         resend.Emails.send(email_payload)
+#     except Exception as e:
+#         raise Exception(f"Invoice email failed: {str(e)}")
+
