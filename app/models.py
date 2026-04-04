@@ -6,40 +6,40 @@ from datetime  import date , datetime
 from sqlalchemy.dialects.postgresql import JSON
 
 
-# class ODT(Base):
-#     __tablename__ = "odt_bookings"
+class ODT(Base):
+    __tablename__ = "odt_bookings"
 
-#     id = Column(Integer , primary_key= True , index=  True )
-#     full_name = Column(String(100), nullable=False )
-#     email_address = Column(String(100), nullable=False )
-#     age = Column(Integer, nullable=False)
-#     gender = Column(String(20), nullable=False)
-#     contact_number = Column(String(12), nullable=False)
-#     whatsapp_number = Column(String(12), nullable=False)
-#     college_name = Column(String(200), nullable=False)
-#     pick_up_loc = Column(String(50), nullable=False)
-#     drop_loc = Column(String(50), nullable=False)
-#     meal_preference = Column(String(30), nullable=False)
-#     trip_exp_level = Column(String(40))
-#     medical_details = Column(String(100))
-#     payment_screenshot = Column(String(255), nullable=False)
-#     agree = Column(Boolean, default=False)
-#     submitted_at = Column(TIMESTAMP(timezone=True) , nullable= False ,server_default = text('now()') ) 
+    id = Column(Integer , primary_key= True , index=  True )
+    full_name = Column(String(100), nullable=False )
+    email_address = Column(String(100), nullable=False )
+    age = Column(Integer, nullable=False)
+    gender = Column(String(20), nullable=False)
+    contact_number = Column(String(12), nullable=False)
+    whatsapp_number = Column(String(12), nullable=False)
+    college_name = Column(String(200), nullable=False)
+    pick_up_loc = Column(String(50), nullable=False)
+    drop_loc = Column(String(50), nullable=False)
+    meal_preference = Column(String(30), nullable=False)
+    trip_exp_level = Column(String(40))
+    medical_details = Column(String(100))
+    payment_screenshot = Column(String(255), nullable=False)
+    agree = Column(Boolean, default=False)
+    submitted_at = Column(TIMESTAMP(timezone=True) , nullable= False ,server_default = text('now()') ) 
 
-#     __table_args__ = (
-#         CheckConstraint("full_name <> '' AND TRIM(full_name) <> ''", name="full_name_not_blank"),
-#         CheckConstraint("email_address <> '' AND TRIM(email_address) <> ''", name="email_not_blank"),
-#         CheckConstraint("gender <> '' AND TRIM(gender) <> ''", name="gender_not_blank"),
-#         CheckConstraint("college_name <> '' AND TRIM(college_name) <> ''", name="college_not_blank"),
-#     )
-# class ODTCoupon(Base):
-#     __tablename__ = "odt_coupon"
+    __table_args__ = (
+        CheckConstraint("full_name <> '' AND TRIM(full_name) <> ''", name="full_name_not_blank"),
+        CheckConstraint("email_address <> '' AND TRIM(email_address) <> ''", name="email_not_blank"),
+        CheckConstraint("gender <> '' AND TRIM(gender) <> ''", name="gender_not_blank"),
+        CheckConstraint("college_name <> '' AND TRIM(college_name) <> ''", name="college_not_blank"),
+    )
+class ODTCoupon(Base):
+    __tablename__ = "odt_coupon"
 
-#     id = Column(Integer, primary_key=True, index=True)
-#     coupon_code = Column(String, unique=True, index=True)
-#     discount = Column(Integer, default=50)
-#     used = Column(Boolean, default=False)
-#     used_by_email = Column(String, nullable=True)
+    id = Column(Integer, primary_key=True, index=True)
+    coupon_code = Column(String, unique=True, index=True)
+    discount = Column(Integer, default=50)
+    used = Column(Boolean, default=False)
+    used_by_email = Column(String, nullable=True)
 
 class ODT1(Base):
     __tablename__ = "odt_bookings1"
