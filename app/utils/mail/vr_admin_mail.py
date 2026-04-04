@@ -31,9 +31,9 @@ Selected Temples:
 ID     : {d.aadhar_image_url}
 """
 
-    approve = f"https://tgbackend-production-4811.up.railway.app/admin/vr-darshan/action?booking_id={booking.id}&action=approve"
-    decline_age = f"https://tgbackend-production-4811.up.railway.app/admin/vr-darshan/action?booking_id={booking.id}&action=decline_age"
-    decline_payment = f"https://tgbackend-production-4811.up.railway.app/admin/vr-darshan/action?booking_id={booking.id}&action=decline_payment"
+    approve = f"https://tgbackend-production-bd64.up.railway.app/admin/vr-darshan/action?booking_id={booking.id}&action=approve"
+    decline_age = f"https://tgbackend-production-bd64.up.railway.app/admin/vr-darshan/action?booking_id={booking.id}&action=decline_age"
+    decline_payment = f"https://tgbackend-production-bd64.up.railway.app/admin/vr-darshan/action?booking_id={booking.id}&action=decline_payment"
 
     body = f"""
 NEW VR DARSHAN BOOKING
