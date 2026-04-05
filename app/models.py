@@ -46,6 +46,8 @@ class ODT1(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     primary_email = Column(String(100), nullable=False)
+    primary_traveller_name = Column(String(100), nullable=False)
+    primary_traveller_contact = Column(String(12), nullable=False)
     total_people = Column(Integer, nullable=False)
     total_price = Column(Integer, nullable=False)
     meal_preference = Column(String(30), nullable=False)

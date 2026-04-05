@@ -3,11 +3,24 @@ from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
 import uuid
 import os
+import json
+from app.utils.odt_pricing import get_price_per_person
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_PATH = os.path.abspath(os.path.join(BASE_DIR, "../public/invoice_template.jpg"))
 
-def generate_invoice(data , amount):
+def generate_invoice(data):
+    meal_preference = data.meal_preference
+    quantity = data.total_people
+    total = 1301 * quantity
+    print(get_price_per_person(quantity , meal_preference))
+    amount = quantity * get_price_per_person(quantity , meal_preference)
+    discount = total - amount
+    print("QUANTITY:", quantity ,
+          "MEAL PREF:", meal_preference,
+          "TOTAL:", total,
+          "AMOUNT:", amount,
+          "DISCOUNT:", discount)
     file_name = f"invoice_{uuid.uuid4().hex[:8]}.pdf"
     invoices_folder = os.path.abspath(os.path.join(BASE_DIR, "../invoices"))
     os.makedirs(invoices_folder, exist_ok=True)
@@ -32,34 +45,34 @@ def generate_invoice(data , amount):
     c.drawString(137 * mm, 187 * mm, date_text)
 
     # BILL TO NAME
-    c.drawString(52 * mm, 198 * mm, data.full_name)
+    c.drawString(52 * mm, 198 * mm,data.primary_traveller_name)  # Assuming the first traveller is the primary contact
     
     # PACKAGE DETAILS
     # c.drawString(25 * mm, 185 * mm, "1 Day Adventure Trek")
-    c.drawString(124 * mm, 142 * mm, "1")
-    if(amount == 1101 or amount == 1251): # Holi Offer Applied
-        c.drawString(145 * mm, 142 * mm,str(amount+100))
-        c.drawString(173 * mm, 142 * mm, str(amount+100))
-        c.drawString(170 * mm, 104 * mm, str(amount+100))   # Subtotal
-        c.drawString(170 * mm, 89 * mm, "Coupon Applied")     # Discount
-        c.drawString(170 * mm, 71 * mm, str(amount))   # Total
+    c.drawString(124 * mm, 142 * mm, str(quantity))
+    # if(amount == 1101 or amount == 1251): # Holi Offer Applied
+    c.drawString(145 * mm, 142 * mm,str(1301))
+    c.drawString(173 * mm, 142 * mm, str(total))
+    c.drawString(170 * mm, 104 * mm, str(total))   # Subtotal
+    c.drawString(170 * mm, 89 * mm, str(discount))     # Discount
+    c.drawString(170 * mm, 71 * mm, str(amount))   # Total
 
-        # PAYMENT DETAILS
-        c.drawString(75 * mm, 76 * mm, "UPI")
-        c.drawString(75 * mm, 66 * mm, str(amount))
-        c.drawString(75 * mm, 54 * mm, "0")
-    else:
-        c.drawString(145 * mm, 142 * mm,str(amount))
-        c.drawString(173 * mm, 142 * mm, str(amount))
+    # PAYMENT DETAILS
+    c.drawString(75 * mm, 76 * mm, "UPI")
+    c.drawString(75 * mm, 66 * mm, str(amount))
+    c.drawString(75 * mm, 54 * mm, "0")
+    # else:
+    #     c.drawString(145 * mm, 142 * mm,str(amount))
+    #     c.drawString(173 * mm, 142 * mm, str(amount))
 
-        c.drawString(170 * mm, 104 * mm, str(amount))   # Subtotal
-        c.drawString(170 * mm, 89 * mm, "0")     # Discount
-        c.drawString(170 * mm, 71 * mm, str(amount))   # Total
+    #     c.drawString(170 * mm, 104 * mm, str(amount))   # Subtotal
+    #     c.drawString(170 * mm, 89 * mm, "0")     # Discount
+    #     c.drawString(170 * mm, 71 * mm, str(amount))   # Total
 
-        # PAYMENT DETAILS
-        c.drawString(75 * mm, 76 * mm, "UPI")
-        c.drawString(75 * mm, 66 * mm, str(amount))
-        c.drawString(75 * mm, 54 * mm, "0")
+    #     # PAYMENT DETAILS
+    #     c.drawString(75 * mm, 76 * mm, "UPI")
+    #     c.drawString(75 * mm, 66 * mm, str(amount))
+    #     c.drawString(75 * mm, 54 * mm, "0")
     print(amount , type(amount))
     c.save()
     return file_path        
