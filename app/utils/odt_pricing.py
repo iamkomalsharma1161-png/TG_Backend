@@ -7,7 +7,7 @@ def get_price_per_person(total_people: int , meal_preference :bool) :
             return 1301
         elif total_people <= 5:
             return 1275
-        else: 
+        else:  
             return 1251
     else:
         if total_people  == 1:
