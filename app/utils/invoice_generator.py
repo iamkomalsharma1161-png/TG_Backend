@@ -12,7 +12,7 @@ TEMPLATE_PATH = os.path.abspath(os.path.join(BASE_DIR, "../public/invoice_templa
 def generate_invoice(data):
     meal_preference = data.meal_preference
     quantity = data.total_people
-    total = 1301 * quantity
+    total = 1351 * quantity
     print(get_price_per_person(quantity , meal_preference))
     amount = quantity * get_price_per_person(quantity , meal_preference)
     discount = total - amount
@@ -51,7 +51,7 @@ def generate_invoice(data):
     # c.drawString(25 * mm, 185 * mm, "1 Day Adventure Trek")
     c.drawString(124 * mm, 142 * mm, str(quantity))
     # if(amount == 1101 or amount == 1251): # Holi Offer Applied
-    c.drawString(145 * mm, 142 * mm,str(1301))
+    c.drawString(145 * mm, 142 * mm,str(1351))
     c.drawString(173 * mm, 142 * mm, str(total))
     c.drawString(170 * mm, 104 * mm, str(total))   # Subtotal
     c.drawString(170 * mm, 89 * mm, str(discount))     # Discount
