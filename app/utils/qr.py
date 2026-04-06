@@ -9,7 +9,7 @@ from app.database import engine , get_db
 from app.config import settings 
 from fastapi import BackgroundTasks
 from fastapi import Query
-from app.utils.odt_pricing import get_price_per_person
+# from app.utils.odt_pricing import get_price_per_person
 
 router = APIRouter()
 
@@ -359,12 +359,34 @@ async def calculate_manali_price(
         "amount":amount , 
     }
 
+def get_price_per_person_qr(total_people: int , meal_preference : str):
+    
+  if meal_preference == "true":
+      if total_people == 1:
+          return 1351
+      elif total_people <= 3:
+          return 1301
+      elif total_people <= 5:  
+          return 1275
+      else:   
+          return 1251
+  else:
+      if total_people  == 1:
+          return 1201
+      elif total_people <= 3:
+          return 1151
+      elif total_people <= 5:
+          return 1125
+      else:
+          return 1101
+
 @router.get("/odt/qr")
 async def generate_odt_qr(
   number_of_people: int,
   meal_preference:str
 ):
-    amount = get_price_per_person(number_of_people , meal_preference) * number_of_people
+  # print("MEAL PREF:", meal_preference)
+  amount = get_price_per_person_qr(number_of_people , meal_preference) * number_of_people
 
     # if meal_preference == "with_meal":
     #     amount = with_meal_amount
@@ -374,12 +396,12 @@ async def generate_odt_qr(
     # if is_coupon_applied:
     #     amount = amount - 100
 
-    qr_url = create_qr_base64(amount)
-    print("AMOUNT:", amount)
-    return {
-        "payment_qr_url": qr_url,
-        "amount": amount
-    } 
+  qr_url = create_qr_base64(amount)
+  print("AMOUNT:", amount)
+  return {
+      "payment_qr_url": qr_url,
+      "amount": amount
+  } 
 
 
 
