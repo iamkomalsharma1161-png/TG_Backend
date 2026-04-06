@@ -9,7 +9,7 @@ def get_price_per_person(total_people: int , meal_preference : str):
             return 1275
         else:   
             return 1251
-    elif meal_preference == "without_meal":
+    else:
         if total_people  == 1:
             return 1201
         elif total_people <= 3:
