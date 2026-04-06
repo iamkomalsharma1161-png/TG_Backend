@@ -375,7 +375,7 @@ async def generate_odt_qr(
     #     amount = amount - 100
 
     qr_url = create_qr_base64(amount)
-
+    print("AMOUNT:", amount)
     return {
         "payment_qr_url": qr_url,
         "amount": amount
