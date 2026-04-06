@@ -32,6 +32,7 @@ async def odt_booking(
     db: Session = Depends(get_db)
 ):
     # Parse travellers JSON
+    print(meal_preference )
     travellers_list = json.loads(travellers)
     print("PARSED:", travellers_list)
     print(type(travellers_list))
