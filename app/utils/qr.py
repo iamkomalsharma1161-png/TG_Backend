@@ -411,9 +411,10 @@ async def generate_odt_qr(
   payment_option:str
 ):
   # print("MEAL PREF:", meal_preference)
+  print(number_of_people , meal_preference , sharing_preference , payment_option)
   amount = get_price_per_person(number_of_people , meal_preference , sharing_preference) * number_of_people
 
-  if payment_option == "full_payment":
+  if payment_option !=  "partial":
       amount = amount
   else:
     amount = amount / 2 
