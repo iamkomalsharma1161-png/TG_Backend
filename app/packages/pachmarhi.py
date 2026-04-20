@@ -131,7 +131,7 @@ def approve_booking(
     ).first()
     
     if not booking:
-        raise HTTPException(404, "Booking not found")
+       return HTMLResponse(content=error_page("Booking not found"), status_code=404)
     invoice_path = generate_invoice_pachmarhi(booking)
     if booking.payment_option == "full_payment":
         booking.status = "approved"
@@ -145,7 +145,7 @@ def approve_booking(
         invoice_path
     )
 
-    return {"message": "Booking approved"}
+    return HTMLResponse(content=success_page(booking_id, "approved"))
 
 @router.get("/pachmarhi/decline")
 def decline_booking(
@@ -158,7 +158,7 @@ def decline_booking(
     ).first()
 
     if not booking:
-        raise HTTPException(404, "Booking not found")
+        return HTMLResponse(content=error_page("Booking not found"), status_code=404)
 
     booking.status = "declined"
 
@@ -170,4 +170,146 @@ def decline_booking(
         booking.primary_email
     )
 
-    return {"message": "Booking declined"}
+    return HTMLResponse(content=success_page(booking_id, "declined"))
+
+def success_page(booking_id: int, action: str):
+    is_approved = action == "approved"
+    color = "#28a745" if is_approved else "#dc3545"
+    icon = "✅" if is_approved else "❌"
+    title = "Booking Approved!" if is_approved else "Booking Declined!"
+    message = (
+        "The booking has been approved successfully. A confirmation will be sent to the traveller."
+        if is_approved else
+        "The booking has been declined. The traveller will be notified accordingly."
+    )
+
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>{title}</title>
+      <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+        }}
+        .card {{
+          background: #ffffff;
+          border-radius: 16px;
+          padding: 48px 40px;
+          max-width: 420px;
+          width: 90%;
+          text-align: center;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }}
+        .icon {{
+          font-size: 64px;
+          margin-bottom: 20px;
+        }}
+        .status-badge {{
+          display: inline-block;
+          background-color: {color};
+          color: white;
+          font-size: 13px;
+          font-weight: bold;
+          padding: 6px 18px;
+          border-radius: 20px;
+          margin-bottom: 20px;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }}
+        h1 {{
+          font-size: 24px;
+          color: #1a1a2e;
+          margin-bottom: 12px;
+        }}
+        p {{
+          font-size: 15px;
+          color: #666666;
+          line-height: 1.6;
+          margin-bottom: 24px;
+        }}
+        .booking-id {{
+          background-color: #f9f9f9;
+          border-radius: 8px;
+          padding: 12px 20px;
+          font-size: 14px;
+          color: #999999;
+          margin-bottom: 28px;
+        }}
+        .booking-id span {{
+          font-weight: bold;
+          color: #1a1a2e;
+        }}
+        .footer {{
+          font-size: 12px;
+          color: #cccccc;
+          margin-top: 8px;
+        }}
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <div class="icon">{icon}</div>
+        <div class="status-badge">{action}</div>
+        <h1>{title}</h1>
+        <p>{message}</p>
+        <div class="booking-id">
+          Booking ID: <span>#{booking_id}</span>
+        </div>
+        <div class="footer">© 2026 Tirth Ghumo · Admin Panel</div>
+      </div>
+    </body>
+    </html>
+    """
+
+
+def error_page(message: str):
+    return f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Error</title>
+      <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+        }}
+        .card {{
+          background: #ffffff;
+          border-radius: 16px;
+          padding: 48px 40px;
+          max-width: 420px;
+          width: 90%;
+          text-align: center;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }}
+        .icon {{ font-size: 64px; margin-bottom: 20px; }}
+        h1 {{ font-size: 22px; color: #1a1a2e; margin-bottom: 12px; }}
+        p {{ font-size: 15px; color: #666666; }}
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <div class="icon">⚠️</div>
+        <h1>Something went wrong</h1>
+        <p>{message}</p>
+      </div>
+    </body>
+    </html>
+    """
+
