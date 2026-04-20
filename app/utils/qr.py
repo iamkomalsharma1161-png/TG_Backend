@@ -9,7 +9,7 @@ from app.database import engine , get_db
 from app.config import settings 
 from fastapi import BackgroundTasks
 from fastapi import Query
-# from app.utils.odt_pricing import get_price_per_person
+from app.utils.pricing.pachmarhi import get_price_per_person
 
 router = APIRouter()
 
@@ -411,7 +411,7 @@ async def generate_odt_qr(
   payment_option:str
 ):
   # print("MEAL PREF:", meal_preference)
-  amount = get_price_per_person_qr(number_of_people , meal_preference , sharing_preference) * number_of_people
+  amount = get_price_per_person(number_of_people , meal_preference , sharing_preference) * number_of_people
 
   if payment_option == "full_payment":
       amount = amount
