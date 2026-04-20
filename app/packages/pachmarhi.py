@@ -11,6 +11,7 @@ from app.utils.supabase_uploads import upload_to_supabase
 import json
 from app.utils.pricing.pachmarhi import get_price_per_person
 from app.utils.invoice_generator import generate_invoice_pachmarhi
+from fastapi.responses import HTMLResponse
 
 
 router = APIRouter()
