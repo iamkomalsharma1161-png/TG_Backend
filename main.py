@@ -5,7 +5,8 @@ from sqlalchemy.orm import Session
 from app.database import engine , get_db
 from app.config import settings  
 
-from app.packages import manali , tamia , rishikesh , saarthi , odt , enquiry , hiring , vr_darshan , vr_admin_action , bhajan_jamming 
+from app.packages import manali , tamia , rishikesh , saarthi , odt , enquiry , hiring , vr_darshan , vr_admin_action , bhajan_jamming , pachmarhi
+from app.routers import auth, user_panel
 from app.utils import qr
 import shutil, os
 from fastapi import BackgroundTasks
@@ -47,6 +48,9 @@ app.include_router(vr_darshan.router)
 app.include_router(vr_admin_action.router)
 app.include_router(qr.router)
 app.include_router(bhajan_jamming.router)
+app.include_router(auth.router)
+app.include_router(user_panel.router)
+app.include_router(pachmarhi.router)
 # app.include_router(odt_coupon.router)
 
 

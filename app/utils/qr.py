@@ -403,6 +403,28 @@ async def generate_odt_qr(
       "amount": amount
   } 
 
+@router.get("/pachmarhi/qr")
+async def generate_odt_qr(
+  number_of_people: int,
+  meal_preference:str,
+  sharing_preference:str,
+  payment_option:str
+):
+  # print("MEAL PREF:", meal_preference)
+  amount = get_price_per_person_qr(number_of_people , meal_preference , sharing_preference) * number_of_people
+
+  if payment_option == "full_payment":
+      amount = amount
+  else:
+    amount = amount / 2 
+
+  qr_url = create_qr_base64(amount)
+  print("AMOUNT:", amount)
+  return {
+      "payment_qr_url": qr_url,
+      "amount": amount
+  } 
+
 
 
 

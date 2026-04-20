@@ -1,12 +1,14 @@
 from supabase import create_client, Client
+from fastapi import UploadFile, HTTPException
 import uuid , mimetypes
 from app.config import settings 
+import httpx
 
 SUPABASE_URL = settings.supabase_url
-SUPABASE_KEY = settings.supabase_key
+SUPABASE_SERVICE_ROLE_KEY = settings.supabase_service_role_key
 BUCKET = settings.supabase_bucket
 
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
 def upload_to_supabase(file, folder: str):
     """
@@ -24,9 +26,7 @@ def upload_to_supabase(file, folder: str):
     # Read file bytes from UploadFile
     file_bytes = file.file.read()
 
-    print("DEBUG_URL =", SUPABASE_URL)
-    print("DEBUG_KEY =", SUPABASE_KEY[:10])
-    print("DEBUG_BUCKET =", BUCKET)
+   
     # Upload (IMPORTANT: use file_bytes, NOT file.file)
     supabase.storage.from_(BUCKET).upload(
         path=file_path,
@@ -38,6 +38,37 @@ def upload_to_supabase(file, folder: str):
     public_url = supabase.storage.from_(BUCKET).get_public_url(file_path)
 
     return public_url
+
+
+# async def upload_to_supabase(file: UploadFile, folder: str) -> str:
+#     ext = file.filename.split(".")[-1]
+#     file_name = f"{uuid.uuid4()}.{ext}"
+#     file_path = f"{folder}/{file_name}"
+
+#     file_bytes = await file.read()
+
+#     url = f"{SUPABASE_URL}/storage/v1/object/{BUCKET}/{file_path}"
+
+#     headers = {
+#         "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+#         "Content-Type": file.content_type or "application/octet-stream",
+#     }
+
+#     async with httpx.AsyncClient() as client:
+#         response = await client.post(url, content=file_bytes, headers=headers)
+
+#     # Print everything for debugging
+#     print("Status:", response.status_code)
+#     print("Body:", response.text)
+
+#     if response.status_code not in (200, 201):
+#         raise HTTPException(
+#             status_code=500,
+#             detail=f"Supabase upload failed: {response.status_code} - {response.text}"
+#         )
+
+#     public_url = f"{SUPABASE_URL}/storage/v1/object/public/{BUCKET}/{file_path}"
+#     return public_url
 
 def upload_to_supabase_qr(file_path: str, folder: str) -> str:
     """

@@ -427,7 +427,7 @@ async def add_multiple(
                 contact_number=d.get("contact_number") or None,
                 aadhar_image_url=aadhar_url
             )
-
+            
             db.add(row)
 
         db.commit()

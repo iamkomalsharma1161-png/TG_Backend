@@ -86,6 +86,50 @@ class ODTTraveller(Base):
 
     trip_exp_level = Column(String(40))
     medical_details = Column(String(100))
+class Pachmarhi(Base):
+    __tablename__="pachmarhi"
+
+    id = Column(Integer, primary_key=True, index=True)
+    primary_email = Column(String(100), nullable=False)
+    primary_traveller_name = Column(String(100), nullable=False)
+    primary_traveller_contact = Column(String(12), nullable=False)
+    total_people = Column(Integer, nullable=False)
+    total_price = Column(Integer, nullable=False)
+    meal_preference = Column(String(30), nullable=False)
+    sharing_preference = Column(String(30), nullable=False)
+    status = Column(String(20), default="pending")
+    payment_option = Column(String(255), nullable=True)
+    payment_screenshot = Column(String(255), nullable=False)
+    agree = Column(Boolean, default=False)
+    submitted_at = Column(
+        TIMESTAMP(timezone=True),
+        nullable=False,
+        server_default=text("now()")
+    )
+class PachmarhiTraveller(Base):
+    __tablename__ = "pachmarhi_travellers"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    booking_id = Column(
+        Integer,
+        ForeignKey("pachmarhi.id"),
+        nullable=False
+    )
+    full_name = Column(String(100), nullable=False)
+    email_address = Column(String(100), nullable=False)
+
+    age = Column(Integer, nullable=False)
+    gender = Column(String(20), nullable=False)
+
+    contact_number = Column(String(12), nullable=False)
+    whatsapp_number = Column(String(12), nullable=False)
+    emergency_contact_number = Column(String(12), nullable=False)
+    college_name = Column(String(200), nullable=False)
+    trip_exp_level = Column(String(40))
+    medical_details = Column(String(100))
+    id_image = Column(String(255), nullable=False)
+
 class Tamia(Base):
     __tablename__="tamia"
 
@@ -447,5 +491,47 @@ class BhajanJamming(Base):
         server_default=func.now(),
         nullable=False
     )
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    full_name = Column(String(150), nullable=False)
+    email_address = Column(String(255), unique=True, index=True, nullable=False)
+    contact_number = Column(String(15), unique=True, index=True, nullable=True)
+    password_hash = Column(String(255), nullable=False)
+    age = Column(Integer, nullable=True)
+    city = Column(String(100), nullable=True)
+    emergency_contact_name = Column(String(150), nullable=True)
+    emergency_contact_number = Column(String(15), nullable=True)
+    profile_photo_url = Column(String(500), nullable=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    # updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+class SupportQuery(Base):
+    __tablename__ = "support_queries"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    subject = Column(String(255), nullable=False)
+    query_text = Column(Text, nullable=False)
+    photo_url = Column(String(500), nullable=True)
+    status = Column(String(50), default="Open")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User", backref="support_queries")
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    title = Column(String(255), nullable=False)
+    message = Column(Text, nullable=False)
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User", backref="notifications")
+
 
 
