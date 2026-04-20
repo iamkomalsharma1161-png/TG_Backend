@@ -37,232 +37,168 @@ def send_booking_email(
             <td>{t.gender.title()}</td>
         </tr>
         """
-    admin_action_base = "https://tgbackend-production-bd64.up.railway.app/pachmarhi/approve"
-    approve_link = f"{admin_action_base}?booking_id={booking_id}"
-    decline_link = f"https://tgbackend-production-bd64.up.railway.app/pachmarhi/decline?booking_id={booking_id}"
+    admin_action_base = base_url 
+    approve_link = f"{admin_action_base}/pachmarhi/approve?booking_id={booking_id}"
+    decline_link = f"{admin_action_base}/pachmarhi/decline?booking_id={booking_id}"
     html_body = f"""
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body {{
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-    }}
-    .container {{
-      max-width: 620px;
-      margin: 30px auto;
-      background-color: #ffffff;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }}
-    .header {{
-      background-color: #1a1a2e;
-      padding: 24px 32px;
-      text-align: center;
-    }}
-    .header h1 {{
-      color: #ffffff;
-      margin: 0;
-      font-size: 22px;
-      letter-spacing: 1px;
-    }}
-    .header p {{
-      color: #aaaacc;
-      margin: 4px 0 0;
-      font-size: 13px;
-    }}
-    .badge {{
-      display: inline-block;
-      background-color: #f0a500;
-      color: #1a1a2e;
-      font-weight: bold;
-      font-size: 12px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-top: 10px;
-    }}
-    .body {{
-      padding: 28px 32px;
-    }}
-    .section-title {{
-      font-size: 13px;
-      font-weight: bold;
-      text-transform: uppercase;
-      color: #888888;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
-      border-bottom: 1px solid #eeeeee;
-      padding-bottom: 6px;
-    }}
-    .info-grid {{
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }}
-    .info-item {{
-      background-color: #f9f9f9;
-      border-radius: 8px;
-      padding: 12px 16px;
-    }}
-    .info-item .label {{
-      font-size: 11px;
-      color: #999999;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }}
-    .info-item .value {{
-      font-size: 15px;
-      font-weight: bold;
-      color: #1a1a2e;
-    }}
-    .traveller-table {{
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 24px;
-      font-size: 14px;
-    }}
-    .traveller-table th {{
-      background-color: #1a1a2e;
-      color: #ffffff;
-      padding: 10px 14px;
-      text-align: left;
-      font-weight: 600;
-    }}
-    .traveller-table td {{
-      padding: 10px 14px;
-      border-bottom: 1px solid #eeeeee;
-      color: #333333;
-    }}
-    .traveller-table tr:last-child td {{
-      border-bottom: none;
-    }}
-    .traveller-table tr:nth-child(even) td {{
-      background-color: #f9f9f9;
-    }}
-    .action-section {{
-      text-align: center;
-      padding: 10px 0 10px;
-    }}
-    .action-section p {{
-      color: #666666;
-      font-size: 13px;
-      margin-bottom: 20px;
-    }}
-    .btn {{
-      display: inline-block;
-      padding: 14px 40px;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: bold;
-      text-decoration: none;
-      margin: 0 10px;
-      letter-spacing: 0.5px;
-    }}
-    .btn-approve {{
-      background-color: #28a745;
-      color: #ffffff;
-    }}
-    .btn-decline {{
-      background-color: #dc3545;
-      color: #ffffff;
-    }}
-    .footer {{
-      background-color: #f4f4f4;
-      text-align: center;
-      padding: 16px;
-      font-size: 12px;
-      color: #aaaaaa;
-    }}
-  </style>
-</head>
-<body>
-  <div class="container">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background-color:#f4f4f4;font-family:Arial,sans-serif;">
 
-    <!-- HEADER -->
-    <div class="header">
-      <h1>🏔️ Tirth Ghumo</h1>
-      <p>New Booking Received</p>
-      <span class="badge">Pachmarhi Trip</span>
-    </div>
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f4;padding:30px 0;">
+    <tr>
+      <td align="center">
+        <table width="620" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:10px;overflow:hidden;">
 
-    <!-- BODY -->
-    <div class="body">
-
-      <!-- BOOKING INFO -->
-      <div class="section-title">Booking Details</div>
-      <div class="info-grid">
-        <div class="info-item">
-          <div class="label">Booking ID</div>
-          <div class="value">#{booking.id}</div>
-        </div>
-        <div class="info-item">
-          <div class="label">Primary Email</div>
-          <div class="value">{booking.primary_email}</div>
-        </div>
-        <div class="info-item">
-          <div class="label">Total Travellers</div>
-          <div class="value">{booking.total_people}</div>
-        </div>
-        <div class="info-item">
-          <div class="label">Total Amount</div>
-          <div class="value">₹{booking.total_price}</div>
-        </div>
-        <div class="info-item">
-          <div class="label">Meal Preference</div>
-          <div class="value">{booking.meal_preference.replace("_", " ").title()}</div>
-        </div>
-        <div class="info-item">
-          <div class="label">Sharing Preference</div>
-          <div class="value">{booking.sharing_preference.title()}</div>
-        </div>
-        <div class="info-item">
-          <div class="label">Payment Option</div>
-          <div class="value">{booking.payment_option.title()}</div>
-        </div>
-        <div class="info-item">
-          <div class="label">Booking Date</div>
-          <div class="value">{str(booking.submitted_at.date()) if booking.submitted_at else "N/A"}</div>
-        </div>
-      </div>
-
-      <!-- TRAVELLERS TABLE -->
-      <div class="section-title">Traveller Details</div>
-      <table class="traveller-table">
-        <thead>
+          <!-- HEADER -->
           <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Gender</th>
+            <td style="background-color:#1a1a2e;padding:24px 32px;text-align:center;">
+              <h1 style="color:#ffffff;margin:0;font-size:22px;">🏔️ Tirth Ghumo</h1>
+              <p style="color:#aaaacc;margin:4px 0 0;font-size:13px;">New Booking Received</p>
+              <span style="display:inline-block;background-color:#f0a500;color:#1a1a2e;font-weight:bold;font-size:12px;padding:4px 12px;border-radius:20px;margin-top:10px;">Pachmarhi Trip</span>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {traveller_rows}
-        </tbody>
-      </table>
 
-      <!-- ACTION BUTTONS -->
-      <div class="action-section">
-        <p>Please review the booking and take an action below.</p>
-        <a href="{approve_link}" class="btn btn-approve">✅ Approve</a>
-        <a href="{decline_link}" class="btn btn-decline">❌ Decline</a>
-      </div>
+          <!-- BOOKING DETAILS -->
+          <tr>
+            <td style="padding:28px 32px;">
+              <p style="font-size:13px;font-weight:bold;text-transform:uppercase;color:#888888;letter-spacing:1px;border-bottom:1px solid #eeeeee;padding-bottom:6px;margin-bottom:16px;">Booking Details</p>
 
-    </div>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="50%" style="padding:6px 8px 6px 0;">
+                    <table width="100%" cellpadding="12" cellspacing="0" style="background-color:#f9f9f9;border-radius:8px;">
+                      <tr>
+                        <td>
+                          <p style="font-size:11px;color:#999999;text-transform:uppercase;margin:0 0 4px;">Booking ID</p>
+                          <p style="font-size:15px;font-weight:bold;color:#1a1a2e;margin:0;">#{booking.id}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="50%" style="padding:6px 0 6px 8px;">
+                    <table width="100%" cellpadding="12" cellspacing="0" style="background-color:#f9f9f9;border-radius:8px;">
+                      <tr>
+                        <td>
+                          <p style="font-size:11px;color:#999999;text-transform:uppercase;margin:0 0 4px;">Primary Email</p>
+                          <p style="font-size:15px;font-weight:bold;color:#1a1a2e;margin:0;">{booking.primary_email}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="50%" style="padding:6px 8px 6px 0;">
+                    <table width="100%" cellpadding="12" cellspacing="0" style="background-color:#f9f9f9;border-radius:8px;">
+                      <tr>
+                        <td>
+                          <p style="font-size:11px;color:#999999;text-transform:uppercase;margin:0 0 4px;">Total Travellers</p>
+                          <p style="font-size:15px;font-weight:bold;color:#1a1a2e;margin:0;">{booking.total_people}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="50%" style="padding:6px 0 6px 8px;">
+                    <table width="100%" cellpadding="12" cellspacing="0" style="background-color:#f9f9f9;border-radius:8px;">
+                      <tr>
+                        <td>
+                          <p style="font-size:11px;color:#999999;text-transform:uppercase;margin:0 0 4px;">Total Amount</p>
+                          <p style="font-size:15px;font-weight:bold;color:#1a1a2e;margin:0;">₹{booking.total_price}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="50%" style="padding:6px 8px 6px 0;">
+                    <table width="100%" cellpadding="12" cellspacing="0" style="background-color:#f9f9f9;border-radius:8px;">
+                      <tr>
+                        <td>
+                          <p style="font-size:11px;color:#999999;text-transform:uppercase;margin:0 0 4px;">Meal Preference</p>
+                          <p style="font-size:15px;font-weight:bold;color:#1a1a2e;margin:0;">{booking.meal_preference.replace("_", " ").title()}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="50%" style="padding:6px 0 6px 8px;">
+                    <table width="100%" cellpadding="12" cellspacing="0" style="background-color:#f9f9f9;border-radius:8px;">
+                      <tr>
+                        <td>
+                          <p style="font-size:11px;color:#999999;text-transform:uppercase;margin:0 0 4px;">Sharing Preference</p>
+                          <p style="font-size:15px;font-weight:bold;color:#1a1a2e;margin:0;">{booking.sharing_preference.title()}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td width="50%" style="padding:6px 8px 6px 0;">
+                    <table width="100%" cellpadding="12" cellspacing="0" style="background-color:#f9f9f9;border-radius:8px;">
+                      <tr>
+                        <td>
+                          <p style="font-size:11px;color:#999999;text-transform:uppercase;margin:0 0 4px;">Payment Option</p>
+                          <p style="font-size:15px;font-weight:bold;color:#1a1a2e;margin:0;">{booking.payment_option.title()}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td width="50%" style="padding:6px 0 6px 8px;">
+                    <table width="100%" cellpadding="12" cellspacing="0" style="background-color:#f9f9f9;border-radius:8px;">
+                      <tr>
+                        <td>
+                          <p style="font-size:11px;color:#999999;text-transform:uppercase;margin:0 0 4px;">Booking Date</p>
+                          <p style="font-size:15px;font-weight:bold;color:#1a1a2e;margin:0;">{str(booking.submitted_at.date()) if booking.submitted_at else "N/A"}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-    <!-- FOOTER -->
-    <div class="footer">
-      © 2026 Tirth Ghumo · This is an automated admin notification
-    </div>
+          <!-- TRAVELLERS TABLE -->
+          <tr>
+            <td style="padding:0 32px 28px;">
+              <p style="font-size:13px;font-weight:bold;text-transform:uppercase;color:#888888;letter-spacing:1px;border-bottom:1px solid #eeeeee;padding-bottom:6px;margin-bottom:16px;">Traveller Details</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:14px;">
+                <thead>
+                  <tr>
+                    <th style="background-color:#1a1a2e;color:#ffffff;padding:10px 14px;text-align:left;">#</th>
+                    <th style="background-color:#1a1a2e;color:#ffffff;padding:10px 14px;text-align:left;">Name</th>
+                    <th style="background-color:#1a1a2e;color:#ffffff;padding:10px 14px;text-align:left;">Age</th>
+                    <th style="background-color:#1a1a2e;color:#ffffff;padding:10px 14px;text-align:left;">Gender</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {traveller_rows}
+                </tbody>
+              </table>
+            </td>
+          </tr>
 
-  </div>
+          <!-- ACTION BUTTONS -->
+          <tr>
+            <td style="padding:0 32px 32px;text-align:center;">
+              <p style="color:#666666;font-size:13px;margin-bottom:20px;">Please review the booking and take an action below.</p>
+              <a href="{approve_link}" style="display:inline-block;padding:14px 40px;background-color:#28a745;color:#ffffff;text-decoration:none;border-radius:8px;font-size:15px;font-weight:bold;margin:0 10px;">✅ Approve</a>
+              <a href="{decline_link}" style="display:inline-block;padding:14px 40px;background-color:#dc3545;color:#ffffff;text-decoration:none;border-radius:8px;font-size:15px;font-weight:bold;margin:0 10px;">❌ Decline</a>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="background-color:#f4f4f4;text-align:center;padding:16px;font-size:12px;color:#aaaaaa;">
+              © 2026 Tirth Ghumo · This is an automated admin notification
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
 </body>
 </html>
 """
