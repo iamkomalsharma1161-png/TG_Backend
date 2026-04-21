@@ -141,18 +141,18 @@ def approve_booking(
     
     if not booking:
        return HTMLResponse(content=error_page("Booking not found"), status_code=404)
-    invoice_path = generate_invoice_pachmarhi(booking)
+    # invoice_path = generate_invoice_pachmarhi(booking)
     if booking.payment_option == "full_payment":
         booking.status = "approved"
 
     db.commit()
 
-    # background_tasks.add_task(
-    #     send_email_with_invoice,
-    #     booking.primary_email,
-    #     booking,
-    #     invoice_path
-    # )
+    background_tasks.add_task(
+        send_email_with_invoice,
+        booking.primary_email,
+        booking
+        
+    )
 
     return HTMLResponse(content=success_page(booking_id, "approved"))
 

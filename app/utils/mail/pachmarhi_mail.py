@@ -268,29 +268,33 @@ Team TirthGhumo
 
 
 
-async def send_email_with_invoice(email ,data, invoice_path):
+async def send_email_with_invoice(email ,data):
     """Send invoice PDF to user using Resend"""
 
     # ---- Attach PDF ----
-    with open(invoice_path, "rb") as f:
-        file_bytes = base64.b64encode(f.read()).decode("utf-8")
+    # with open(invoice_path, "rb") as f:
+    #     file_bytes = base64.b64encode(f.read()).decode("utf-8")
 
     # ---- Email Body ----
     email_body = f"""
-   Hey🌿
+  Hey 🌿 ,
 
-Thank you so much for booking with us! We are truly honoured to be a part of your journey.
+Thank you for booking with us! We’re genuinely excited to be part of your Pachmarhi journey.
 
-Your booking for the Pachmarhi trip has been received successfully. We are so excited for you and we promise to make this an experience you will always remember.
+Your registration has been successfully received, and your spot is now secured. Get ready for an unforgettable experience filled with nature, peace, and adventure.
 
-Our team will reach out to you soon with all the details. Until then, sit back and start getting excited for an amazing adventure!
+To make sure you don’t miss any important updates, trip details, or coordination messages, please join our official WhatsApp group using the link below:
 
-Wishing you a wonderful trip ahead. 🌿
+👉 Join WhatsApp Group: https://chat.whatsapp.com/CbdC66Ftn2o6XOGifeNroG?mode=gi_t
+
+Our team will also connect with you shortly for further guidance.
+
+Until then, start packing your bags and get ready for something amazing 🌄
 
 Warm regards,
 Team TirthGhumo
 
-Thank you for choosing TirthGhumo — Aastha Bhi, Suvidha Bhi 🌄
+Aastha Bhi, Suvidha Bhi 🌿
 
     """
 
@@ -298,15 +302,15 @@ Thank you for choosing TirthGhumo — Aastha Bhi, Suvidha Bhi 🌄
     email_payload = {
         "from": "Tirth Ghumo <no-reply@tirthghumo.in>",
         "to": [email],
-        "subject": "Booking Confirmed – See You in Pachmarhi! 🌿",
-        "text": email_body.strip(),
-        "attachments": [
-            {
-                "filename": "invoice.pdf",
-                "content": file_bytes,
-                "type": "application/pdf"
-            }
-        ]
+        "subject": "Your Pachmarhi Trip Booking is Confirmed 🌿",
+        "text": email_body.strip()
+        # "attachments": [
+        #     {
+        #         "filename": "invoice.pdf",
+        #         "content": file_bytes,
+        #         "type": "application/pdf"
+        #     }
+        # ]
     }
 
     # ---- Send ----
