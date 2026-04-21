@@ -48,8 +48,12 @@ async def pachmarhi_booking(
     price_per_person = get_price_per_person(total_people, meal_preference , sharing_preference)
     total_price = price_per_person * total_people
     if payment_option == "partial":
-        total_price = total_price / 2
-    print(total_price)
+        paid_amount = total_price / 2
+    elif payment_option == "seat_booking":
+        paid_amount = 1500 * total_people 
+    else:
+        paid_amount = total_price
+    
 
     if not total_price:
         raise HTTPException(status_code=400, detail="Invalid group size")
@@ -69,6 +73,7 @@ async def pachmarhi_booking(
         primary_traveller_contact=primary_traveller_contact,
         total_people=total_people,
         total_price=total_price,
+        paid_amount=paid_amount,                   # FIX 3: Store calculated paid amount
         meal_preference=meal_preference,
         sharing_preference=sharing_preference,  # FIX 4: Match the typo in your model column
         payment_option=payment_option,         # FIX 5: Match singular column name in model
@@ -96,6 +101,8 @@ async def pachmarhi_booking(
             gender=traveller["gender"],
             contact_number=traveller["contact_number"],
             whatsapp_number=traveller["whatsapp_number"],
+            pick_up_loc=traveller["pick_up_loc"],
+            drop_loc=traveller["drop_loc"],
             emergency_contact_number=traveller["emergency_contact_number"],
             college_name=traveller["college_name"],
             trip_exp_level=traveller.get("trip_exp_level"),
@@ -118,7 +125,8 @@ async def pachmarhi_booking(
         "message": "Booking successful",
         "booking_id": booking.id,
         "total_people": total_people,
-        "total_price": total_price
+        "total_price": total_price,
+        "paid_amount": paid_amount
     }
 
 @router.get("/pachmarhi/approve")
@@ -139,12 +147,12 @@ def approve_booking(
 
     db.commit()
 
-    background_tasks.add_task(
-        send_email_with_invoice,
-        booking.primary_email,
-        booking,
-        invoice_path
-    )
+    # background_tasks.add_task(
+    #     send_email_with_invoice,
+    #     booking.primary_email,
+    #     booking,
+    #     invoice_path
+    # )
 
     return HTMLResponse(content=success_page(booking_id, "approved"))
 

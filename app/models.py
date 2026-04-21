@@ -95,6 +95,7 @@ class Pachmarhi(Base):
     primary_traveller_contact = Column(String(12), nullable=False)
     total_people = Column(Integer, nullable=False)
     total_price = Column(Integer, nullable=False)
+    paid_amount = Column(Integer, nullable=True)
     meal_preference = Column(String(30), nullable=False)
     sharing_preference = Column(String(30), nullable=False)
     status = Column(String(20), default="pending")
@@ -121,7 +122,8 @@ class PachmarhiTraveller(Base):
 
     age = Column(Integer, nullable=False)
     gender = Column(String(20), nullable=False)
-
+    pick_up_loc = Column(String(50), nullable=False)
+    drop_loc = Column(String(50), nullable=False)
     contact_number = Column(String(12), nullable=False)
     whatsapp_number = Column(String(12), nullable=False)
     emergency_contact_number = Column(String(12), nullable=False)

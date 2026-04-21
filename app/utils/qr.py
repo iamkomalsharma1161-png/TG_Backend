@@ -414,10 +414,16 @@ async def generate_odt_qr(
   print(number_of_people , meal_preference , sharing_preference , payment_option)
   amount = get_price_per_person(number_of_people , meal_preference , sharing_preference) * number_of_people
 
-  if payment_option !=  "partial":
-      amount = amount
+  # if payment_option !=  "partial":
+  #     amount = amount
+  # else:
+  #   amount = amount / 2 
+  if payment_option == "seat_booking":
+    amount = 1500 * number_of_people
+  elif payment_option ==  "partial":
+      amount = amount / 2
   else:
-    amount = amount / 2 
+      amount = amount
 
   qr_url = create_qr_base64(amount)
   print("AMOUNT:", amount)
